@@ -109,39 +109,6 @@ export function Landing() {
         </div>
       </section>
 
-      {/* visual references */}
-      <section className="mx-auto max-w-6xl px-5 py-8 sm:px-8 lg:py-12">
-        <div className="grid items-end gap-8 lg:grid-cols-[0.72fr_1.28fr]">
-          <div className="max-w-md">
-            <p className="eyebrow">Built for the moments between appointments</p>
-            <h2 className="mt-3 text-[30px] font-semibold leading-[1.12] tracking-[-0.03em] text-ink sm:text-[38px]">
-              A calmer way to keep your care in view.
-            </h2>
-            <p className="mt-4 text-[16px] leading-relaxed text-ink-soft">
-              Capture what matters while it is fresh, then return to a clear, grounded record when you need it.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-3 sm:gap-5">
-            <figure className="group overflow-hidden rounded-[26px] border border-white/90 bg-white/55 shadow-[0_18px_36px_-22px_rgba(38,62,125,0.45)]">
-              <img
-                src="/careecho-visual-01.png"
-                alt="CareEcho visual"
-                className="aspect-[3/2] w-full object-cover transition duration-500 group-hover:scale-[1.025]"
-              />
-              <figcaption className="px-4 py-3 text-[13px] font-semibold text-ink">Speak in your own words</figcaption>
-            </figure>
-            <figure className="group mt-7 overflow-hidden rounded-[26px] border border-white/90 bg-white/55 shadow-[0_18px_36px_-22px_rgba(38,62,125,0.45)] sm:mt-10">
-              <img
-                src="/careecho-visual-02.png"
-                alt="CareEcho visual"
-                className="aspect-[3/2] w-full object-cover transition duration-500 group-hover:scale-[1.025]"
-              />
-              <figcaption className="px-4 py-3 text-[13px] font-semibold text-ink">Find the words that matter</figcaption>
-            </figure>
-          </div>
-        </div>
-      </section>
-
       {/* features */}
       <section id="features" className="mx-auto max-w-6xl scroll-mt-10 px-5 py-8 sm:px-8">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

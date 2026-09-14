@@ -4,17 +4,17 @@
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-hand: var(--font-caveat), "Segoe Print", cursive;
 
-  --color-ink: #1b2051;
-  --color-ink-soft: #464d7d;
-  --color-mute: #7b81a8;
-  --color-indigo: #5b5cf0;
-  --color-indigo-deep: #4346d4;
-  --color-lavender: #b9b5ff;
-  --color-periwinkle: #8f96ff;
-  --color-sky: #8ccfff;
-  --color-cyan: #62dcf5;
-  --color-blush: #ffb3cf;
-  --color-rose: #e5487a;
+  --color-ink: #17213d;
+  --color-ink-soft: #4e5b76;
+  --color-mute: #74819a;
+  --color-indigo: #4262d4;
+  --color-indigo-deep: #2948b5;
+  --color-lavender: #b8c3f5;
+  --color-periwinkle: #8198e5;
+  --color-sky: #8bcfdf;
+  --color-cyan: #58c9c9;
+  --color-blush: #f2b4c7;
+  --color-rose: #d94f78;
 }
 
 html,
@@ -23,7 +23,7 @@ body {
 }
 
 body {
-  background: #eef1ff;
+  background: #edf2f7;
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -40,35 +40,35 @@ body {
 /* ------------------------------------------------------------------ */
 
 .glass {
-  background: linear-gradient(155deg, rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.34));
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.82), rgba(248, 251, 255, 0.68));
+  backdrop-filter: blur(22px) saturate(125%);
+  -webkit-backdrop-filter: blur(22px) saturate(125%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   box-shadow:
-    0 12px 32px -16px rgba(70, 80, 180, 0.28),
-    0 2px 6px -2px rgba(70, 80, 180, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    0 16px 34px -20px rgba(38, 62, 125, 0.3),
+    0 2px 7px -3px rgba(38, 62, 125, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
 }
 
 .nav-glass {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(246, 247, 255, 0.84));
-  backdrop-filter: blur(28px) saturate(160%);
-  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(245, 249, 253, 0.91));
+  backdrop-filter: blur(24px) saturate(135%);
+  -webkit-backdrop-filter: blur(24px) saturate(135%);
   border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow:
-    0 16px 36px -14px rgba(60, 64, 170, 0.35),
+    0 16px 36px -14px rgba(38, 62, 125, 0.28),
     inset 0 1px 0 white;
 }
 
 .glass-soft {
-  background: rgba(255, 255, 255, 0.38);
+  background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(18px) saturate(130%);
   -webkit-backdrop-filter: blur(18px) saturate(130%);
   border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .glass-inset {
-  background: linear-gradient(180deg, rgba(236, 239, 255, 0.7), rgba(255, 255, 255, 0.55));
+  background: linear-gradient(180deg, rgba(237, 243, 250, 0.9), rgba(255, 255, 255, 0.7));
   border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow: inset 0 1px 3px rgba(80, 90, 190, 0.08);
 }
@@ -79,14 +79,14 @@ body {
   isolation: isolate;
   background:
     radial-gradient(120% 80% at 0% 0%, rgba(255, 255, 255, 0.9), transparent 55%),
-    radial-gradient(90% 70% at 100% 100%, rgba(186, 178, 255, 0.35), transparent 60%),
-    radial-gradient(70% 60% at 100% 0%, rgba(140, 207, 255, 0.28), transparent 60%),
-    linear-gradient(160deg, rgba(255, 255, 255, 0.66), rgba(245, 246, 255, 0.4));
-  backdrop-filter: blur(26px) saturate(150%);
-  -webkit-backdrop-filter: blur(26px) saturate(150%);
+    radial-gradient(90% 70% at 100% 100%, rgba(170, 190, 239, 0.25), transparent 60%),
+    radial-gradient(70% 60% at 100% 0%, rgba(122, 204, 215, 0.2), transparent 60%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.8), rgba(246, 250, 253, 0.58));
+  backdrop-filter: blur(24px) saturate(130%);
+  -webkit-backdrop-filter: blur(24px) saturate(130%);
   box-shadow:
-    0 18px 40px -20px rgba(72, 76, 200, 0.38),
-    0 3px 10px -4px rgba(72, 76, 200, 0.12),
+    0 18px 40px -20px rgba(38, 62, 125, 0.3),
+    0 3px 10px -4px rgba(38, 62, 125, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 .prism::before {
@@ -98,9 +98,9 @@ body {
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.95),
-    rgba(150, 205, 255, 0.7) 28%,
+    rgba(139, 207, 223, 0.65) 28%,
     rgba(255, 255, 255, 0.6) 48%,
-    rgba(196, 170, 255, 0.75) 72%,
+    rgba(170, 188, 239, 0.7) 72%,
     rgba(255, 255, 255, 0.9)
   );
   -webkit-mask:
@@ -121,16 +121,22 @@ body {
   color: white;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 52%),
-    linear-gradient(100deg, #7b86ff 0%, #5d5ff2 45%, #4a4ee0 100%);
+    linear-gradient(100deg, #5c7de2 0%, #4262d4 48%, #2948b5 100%);
   box-shadow:
-    0 14px 30px -12px rgba(76, 78, 230, 0.65),
-    0 2px 6px rgba(76, 78, 230, 0.25),
+    0 14px 30px -12px rgba(41, 72, 181, 0.55),
+    0 2px 6px rgba(41, 72, 181, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.45),
     inset 0 -2px 6px rgba(40, 30, 160, 0.25);
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 .btn-primary:hover {
   filter: brightness(1.04);
+  transform: translateY(-1px);
+  box-shadow:
+    0 18px 32px -14px rgba(41, 72, 181, 0.62),
+    0 3px 8px rgba(41, 72, 181, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -2px 6px rgba(28, 45, 130, 0.25);
 }
 .btn-primary:active {
   transform: scale(0.98);
@@ -151,9 +157,18 @@ body {
 .btn-glass:active {
   transform: scale(0.98);
 }
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(66, 98, 212, 0.35);
+  outline-offset: 3px;
+}
 
 .text-gradient {
-  background: linear-gradient(95deg, #4f55e6 0%, #7a6cff 45%, #9f7bff 100%);
+  background: linear-gradient(95deg, #2948b5 0%, #4262d4 48%, #238d9c 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -172,7 +187,7 @@ body {
 /* ------------------------------------------------------------------ */
 
 .device {
-  background: linear-gradient(180deg, rgba(247, 248, 255, 0.72), rgba(236, 239, 255, 0.55));
+  background: linear-gradient(180deg, rgba(248, 251, 254, 0.86), rgba(235, 243, 249, 0.72));
 }
 
 @media (min-width: 640px) and (min-height: 560px) {

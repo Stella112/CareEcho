@@ -17,42 +17,42 @@ export function WaveBackground({ contained = false }: { contained?: boolean }) {
     <div
       aria-hidden
       className={`${contained ? "absolute" : "fixed"} inset-0 -z-10 overflow-hidden pointer-events-none`}
-      style={{ background: "linear-gradient(165deg, #f5f6ff 0%, #e8ecff 38%, #efe9ff 68%, #e4eeff 100%)" }}
+      style={{ background: "linear-gradient(165deg, #f5f9fc 0%, #e8f1f7 38%, #eef4f8 68%, #e4eef4 100%)" }}
     >
       <svg width="0" height="0" className="absolute">
         <defs>
           <linearGradient id="wave-a" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stopColor="#ffffff" />
-            <stop offset="0.5" stopColor="#d9dcff" />
-            <stop offset="1" stopColor="#c4d8ff" />
+            <stop offset="0.5" stopColor="#d5e5f5" />
+            <stop offset="1" stopColor="#c3e2e6" />
           </linearGradient>
           <linearGradient id="wave-b" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="#e3dcff" />
+            <stop offset="0" stopColor="#dce9f5" />
             <stop offset="0.5" stopColor="#ffffff" />
-            <stop offset="1" stopColor="#cfe6ff" />
+            <stop offset="1" stopColor="#cce9eb" />
           </linearGradient>
           <linearGradient id="wave-c" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#bfc4ff" />
-            <stop offset="1" stopColor="#eef0ff" />
+            <stop offset="0" stopColor="#bcd8eb" />
+            <stop offset="1" stopColor="#eaf2f7" />
           </linearGradient>
         </defs>
       </svg>
 
       {/* colour fields */}
-      <div className="animate-blob absolute -left-[15%] -top-[10%] h-[55%] w-[60%] rounded-full bg-[radial-gradient(circle,rgba(150,160,255,0.45),transparent_65%)] blur-2xl" />
+      <div className="animate-blob absolute -left-[15%] -top-[10%] h-[55%] w-[60%] rounded-full bg-[radial-gradient(circle,rgba(127,158,224,0.28),transparent_65%)] blur-2xl" />
       <div
-        className="animate-blob absolute -right-[10%] top-[5%] h-[50%] w-[55%] rounded-full bg-[radial-gradient(circle,rgba(120,210,255,0.35),transparent_65%)] blur-2xl"
+        className="animate-blob absolute -right-[10%] top-[5%] h-[50%] w-[55%] rounded-full bg-[radial-gradient(circle,rgba(100,196,204,0.22),transparent_65%)] blur-2xl"
         style={{ animationDelay: "-9s" }}
       />
       <div
-        className="animate-blob absolute bottom-[10%] left-[20%] h-[45%] w-[60%] rounded-full bg-[radial-gradient(circle,rgba(200,170,255,0.35),transparent_65%)] blur-2xl"
+        className="animate-blob absolute bottom-[10%] left-[20%] h-[45%] w-[60%] rounded-full bg-[radial-gradient(circle,rgba(158,178,229,0.2),transparent_65%)] blur-2xl"
         style={{ animationDelay: "-17s" }}
       />
 
       {/* prism beams */}
-      <div className="animate-beam absolute -top-[20%] left-[30%] h-[140%] w-[18%] rotate-[24deg] bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.55),rgba(190,225,255,0.3),rgba(225,200,255,0.25),transparent)] blur-md" />
+      <div className="animate-beam absolute -top-[20%] left-[30%] h-[140%] w-[18%] rotate-[24deg] bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.55),rgba(190,225,235,0.24),rgba(190,210,240,0.18),transparent)] blur-md" />
       <div
-        className="animate-beam absolute -top-[20%] right-[18%] h-[140%] w-[9%] rotate-[24deg] bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.5),rgba(200,190,255,0.3),transparent)] blur-md"
+        className="animate-beam absolute -top-[20%] right-[18%] h-[140%] w-[9%] rotate-[24deg] bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.5),rgba(180,220,226,0.22),transparent)] blur-md"
         style={{ animationDelay: "-6s" }}
       />
 

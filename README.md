@@ -87,7 +87,7 @@ The language picker supports AssemblyAI Universal-3.5 Pro's 18 languages: Englis
 1. Create a Supabase project.
 2. In the Supabase SQL editor, run supabase/migrations/20260914000000_careecho.sql.
 3. In Authentication URL Configuration, add your local and Vercel /app URLs as redirect URLs.
-4. Enable Google in Authentication Providers if you want the Google button. Email magic links work with the email provider enabled.
+4. Enable Google in Authentication Providers if you want the Google button. For email OTP, use the Magic link or OTP template and render {{ .Token }} instead of {{ .ConfirmationURL }}.
 5. Add the Supabase public variables, AssemblyAI key and OpenAI key to local development and Vercel.
 
 The exact variable names are in .env.example. Never put a service-role key in the browser.

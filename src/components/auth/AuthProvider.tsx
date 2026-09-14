@@ -10,6 +10,7 @@ type AuthContextValue = {
   loading: boolean;
   user: User | null;
   signInWithEmail: (email: string) => Promise<void>;
+  verifyEmailOtp: (email: string, token: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
 };
@@ -56,10 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading,
       user,
       async signInWithEmail(email) {
-        const { error } = await createClient().auth.signInWithOtp({
-          email,
-          options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=/app` },
-        });
+        const { error } = await createClient().auth.signInWithOtp({ email });
+        if (error) throw error;
+      },
+      async verifyEmailOtp(email, token) {
+        const { error } = await createClient().auth.verifyOtp({ email, token, type: "email" });
         if (error) throw error;
       },
       async signInWithGoogle() {

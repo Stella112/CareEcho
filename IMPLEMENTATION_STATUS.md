@@ -4,7 +4,7 @@ This is the live build checklist for the hackathon MVP+.
 
 - [x] Design
 - [x] Landing
-- [x] Auth UI (Google + email magic link)
+- [x] Auth UI (Google + email OTP)
 - [x] Onboarding
 - [x] Database schema
 - [x] RLS

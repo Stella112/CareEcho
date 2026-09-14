@@ -1,4 +1,5 @@
 import type { TranscriptResult } from "./assemblyai";
+import type { LanguageCode } from "./languages";
 
 export class ApiError extends Error {
   constructor(
@@ -9,11 +10,12 @@ export class ApiError extends Error {
   }
 }
 
-export async function transcribeBlob(blob: Blob, kind: "symptom" | "visit" | "question"): Promise<TranscriptResult> {
+export async function transcribeBlob(blob: Blob, kind: "symptom" | "visit" | "question", language: LanguageCode = "en"): Promise<TranscriptResult> {
   const ext = blob.type.includes("mp4") ? "m4a" : blob.type.includes("ogg") ? "ogg" : "webm";
   const form = new FormData();
   form.append("audio", blob, `recording.${ext}`);
   form.append("kind", kind);
+  form.append("language", language);
   let res: Response;
   try {
     res = await fetch("/api/transcribe", { method: "POST", body: form });

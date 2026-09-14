@@ -1,9 +1,9 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { BatteryFull, Signal, Wifi } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { healthMemory, type HealthEntryRecord, type VisitRecord } from "@/lib/healthMemory";
+import { isLanguageCode, type LanguageCode } from "@/lib/languages";
 import type { Engine, HealthEntry } from "@/lib/schemas";
 import { WaveBackground } from "../ui/WaveBackground";
 import { BottomNav } from "./BottomNav";
@@ -37,6 +37,7 @@ type Shell = {
   closeSheet: () => void;
   toast: (msg: string) => void;
   status: ServiceStatus;
+  language: LanguageCode;
 };
 
 const ShellContext = createContext<Shell | null>(null);
@@ -106,6 +107,7 @@ export function AppShell() {
   const [sheet, setSheet] = useState<ReactNode>(null);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [status, setStatus] = useState<ServiceStatus>(null);
+  const [language, setLanguage] = useState<LanguageCode>("en");
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -119,6 +121,8 @@ export function AppShell() {
     const load = () => {
       setEntries(healthMemory.listEntries());
       setVisits(healthMemory.listVisits());
+      const savedLanguage = healthMemory.getLanguage();
+      if (isLanguageCode(savedLanguage)) setLanguage(savedLanguage);
     };
     load();
     setView(viewFromHash(window.location.hash, healthMemory.listVisits()));
@@ -153,8 +157,8 @@ export function AppShell() {
   }, []);
 
   const ctx = useMemo<Shell>(
-    () => ({ view, go, entries, visits, openSheet: setSheet, closeSheet: () => setSheet(null), toast, status }),
-    [view, go, entries, visits, toast, status],
+    () => ({ view, go, entries, visits, openSheet: setSheet, closeSheet: () => setSheet(null), toast, status, language }),
+    [view, go, entries, visits, toast, status, language],
   );
 
   const screenKey = view.name === "visit" ? `visit-${view.id}` : view.name;
@@ -171,17 +175,6 @@ export function AppShell() {
             <div className="absolute -left-20 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.9),transparent_65%)]" />
             <div className="absolute -right-24 top-40 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(186,178,255,0.35),transparent_65%)]" />
             <div className="absolute -bottom-20 left-10 h-64 w-80 rounded-full bg-[radial-gradient(circle,rgba(140,207,255,0.28),transparent_65%)]" />
-          </div>
-
-          {/* faux status bar — desktop showcase frame only */}
-          <div className="device-status absolute inset-x-0 top-0 z-40 h-[50px] items-center justify-between px-9 text-[14px] font-semibold text-ink lg:hidden">
-            <span>9:41</span>
-            <span className="absolute left-1/2 top-[11px] h-[30px] w-[108px] -translate-x-1/2 rounded-full bg-[#0d0f24]" />
-            <span className="flex items-center gap-1.5">
-              <Signal size={15} strokeWidth={2.6} />
-              <Wifi size={15} strokeWidth={2.6} />
-              <BatteryFull size={19} strokeWidth={2} />
-            </span>
           </div>
 
           {mounted && (

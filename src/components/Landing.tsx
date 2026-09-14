@@ -22,7 +22,7 @@ const FEATURES = [
   { Icon: GitCommitVertical, title: "Symptom Timeline", body: "Speak how you feel. See the pattern, in your own words.", tone: "indigo" as const },
   { Icon: Stethoscope, title: "Visit Mode", body: "Record the consultation. Keep every instruction.", tone: "cyan" as const },
   { Icon: FileSearch, title: "Evidence-backed Answers", body: "Ask Ada later — every answer shows the exact words.", tone: "lavender" as const },
-  { Icon: Globe, title: "Multilingual-ready", body: "Built for care without language barriers. English first.", tone: "indigo" as const },
+  { Icon: Globe, title: "18-language voice capture", body: "Speak naturally in any supported language, including code-switching.", tone: "indigo" as const },
 ];
 
 const STEPS = [

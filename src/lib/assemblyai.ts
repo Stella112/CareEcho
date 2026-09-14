@@ -6,11 +6,12 @@
  *   GET  /v2/transcript/:id → status: queued | processing | completed | error
  */
 import type { Utterance } from "./schemas";
+import type { LanguageCode } from "./languages";
 
 const BASE = "https://api.assemblyai.com";
 // AssemblyAI's current pre-recorded API model IDs. Keep Universal-2 as a
 // fallback so a short-lived model/config issue does not block the demo.
-const SPEECH_MODELS = ["universal-3-pro", "universal-2"];
+const SPEECH_MODELS = ["universal-3-5-pro", "universal-2"];
 
 export type TranscriptResult = {
   id: string;
@@ -66,13 +67,13 @@ async function poll(key: string, id: string, deadline: number): Promise<AaiTrans
 
 export async function transcribe(
   audio: ArrayBuffer,
-  opts: { diarize: boolean; medical: boolean; timeoutMs?: number },
+  opts: { diarize: boolean; medical: boolean; language?: LanguageCode; timeoutMs?: number },
 ): Promise<TranscriptResult> {
   const key = apiKey();
   const deadline = Date.now() + (opts.timeoutMs ?? 100_000);
   const audioUrl = await upload(key, audio);
 
-  const base = { audio_url: audioUrl, speech_models: SPEECH_MODELS, language_code: "en" };
+  const base = { audio_url: audioUrl, speech_models: SPEECH_MODELS, language_code: opts.language ?? "en" };
   // Preferred config first; fall back so diarization / Medical Mode never block the MVP.
   const configs: Record<string, unknown>[] = [];
   if (opts.diarize && opts.medical) configs.push({ ...base, speaker_labels: true, domain: "medical-v1" });

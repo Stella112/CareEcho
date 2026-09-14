@@ -51,7 +51,7 @@ API keys are only read server-side (route handlers). Nothing sensitive reaches t
 
 | Path | Purpose |
 | --- | --- |
-| `src/lib/assemblyai.ts` | Pre-recorded REST flow: `POST /v2/upload` → `POST /v2/transcript` → poll `GET /v2/transcript/:id`. `speech_models: ["universal-3-pro","universal-2"]`, `language_code: "en"`. Visits add `speaker_labels: true` and `domain: "medical-v1"`, automatically falling back to plain transcription if either config is rejected. |
+| `src/lib/assemblyai.ts` | Pre-recorded REST flow: `POST /v2/upload` → `POST /v2/transcript` → poll `GET /v2/transcript/:id`. Uses `speech_models: ["universal-3-5-pro","universal-2"]` and the selected language code. Visits add `speaker_labels: true` and `domain: "medical-v1"`, automatically falling back to plain transcription if either config is rejected. |
 | `src/lib/ai.ts` | The only three AI functions: `extractHealthEntry()`, `extractVisitInstructions()`, `answerFromEvidence()`. OpenAI Responses API structured outputs, validated with Zod. |
 | `src/lib/guards.ts` | Verifies every model claim against the real transcript before it is shown or saved. |
 | `src/lib/rules.ts` | Deterministic fallback extractors, used only if the LLM is unavailable (the UI labels this). Output passes through the same guards. |
@@ -80,7 +80,7 @@ Provenance for health entries is stamped server-side — the model cannot set it
 
 ## Languages
 
-English is fully functional. The language picker lists Spanish, French, Hausa, Yoruba and Swahili as *Coming soon* because AssemblyAI's pre-recorded docs confirm speech support for them. Igbo is shown as *Coming soon* — it isn't listed in AssemblyAI's supported languages yet.
+The language picker supports AssemblyAI Universal-3.5 Pro's 18 languages: English, Spanish, French, German, Italian, Portuguese, Arabic, Danish, Dutch, Finnish, Hebrew, Hindi, Japanese, Mandarin Chinese, Norwegian, Swedish, Turkish and Vietnamese. The selected language is sent to transcription and used to guide CareEcho extraction and answers. Universal-2 remains the fallback for broader coverage outside these 18.
 
 ## Deploy (Vercel)
 

@@ -147,7 +147,7 @@ function AnswerCard({ answer, question, askedBy, visit, onSource }: { answer: Ev
 const SUGGESTIONS = ["What did the doctor say about my medication?", "When is my follow-up?", "Should I take it with food?", "Can I drink alcohol?"];
 
 export function VisitSummaryScreen({ id, fresh }: { id: string; fresh?: boolean }) {
-  const { go, visits, openSheet, toast } = useShell();
+  const { go, visits, openSheet, toast, language } = useShell();
   const visit = visits.find((v) => v.id === id);
   const rec = useRecorder({ maxSeconds: 30 });
   const [askPhase, setAskPhase] = useState<"idle" | "listening" | "transcribing" | "thinking">("idle");
@@ -198,6 +198,7 @@ export function VisitSummaryScreen({ id, fresh }: { id: string; fresh?: boolean 
       const { answer, engine } = await postJSON<{ answer: EvidenceAnswer; engine: Engine }>("/api/ask", {
         question: q,
         visit: { utterances: visit.utterances, facts: visit.facts },
+        language,
       });
       healthMemory.addQA(visit.id, { id: newId(), timestamp: new Date().toISOString(), question: q, askedBy, answer, engine });
     } catch (err) {
@@ -221,7 +222,7 @@ export function VisitSummaryScreen({ id, fresh }: { id: string; fresh?: boolean 
       }
       setAskPhase("transcribing");
       try {
-        const t = await transcribeBlob(blob, "question");
+        const t = await transcribeBlob(blob, "question", language);
         await ask(t.text, "voice");
       } catch (err) {
         toast(err instanceof Error ? err.message : "We couldn't transcribe that recording. Try again.");

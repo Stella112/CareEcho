@@ -6,6 +6,7 @@ import { GlassPanel } from "../ui/Glass";
 import { SafetyNote, ScreenScroll } from "../ui/bits";
 import { LanguageSheet } from "./LanguageSheet";
 import { healthMemory } from "@/lib/healthMemory";
+import { languageName } from "@/lib/languages";
 
 function Row({ icon, label, value, onClick, soon }: { icon: React.ReactNode; label: string; value?: string; onClick?: () => void; soon?: boolean }) {
   return (
@@ -23,7 +24,7 @@ function Row({ icon, label, value, onClick, soon }: { icon: React.ReactNode; lab
 }
 
 export function ProfileScreen() {
-  const { entries, visits, openSheet, status, toast } = useShell();
+  const { entries, visits, openSheet, status, toast, language } = useShell();
 
   const service = (ok: boolean | undefined, name: string) => (
     <div className="flex items-center justify-between px-4 py-3 text-[13.5px]">
@@ -57,7 +58,7 @@ export function ProfileScreen() {
       </header>
 
       <GlassPanel className="mt-6 divide-y divide-white/70">
-        <Row icon={<Globe size={18} />} label="Language" value="English" onClick={() => openSheet(<LanguageSheet />)} />
+        <Row icon={<Globe size={18} />} label="Language" value={languageName(language)} onClick={() => openSheet(<LanguageSheet />)} />
         <Row icon={<BellRing size={18} />} label="Wake Mode (“Hey Ada”)" soon />
         <Row icon={<HardDrive size={18} />} label="Storage" value="This device only" />
       </GlassPanel>

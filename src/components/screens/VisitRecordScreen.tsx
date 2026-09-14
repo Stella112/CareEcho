@@ -16,7 +16,7 @@ import type { Engine, Utterance, VisitFacts } from "@/lib/schemas";
 type Phase = "record" | "transcribing" | "extracting" | "error";
 
 export function VisitRecordScreen() {
-  const { go } = useShell();
+  const { go, language } = useShell();
   const rec = useRecorder({ maxSeconds: 8 * 60 });
   const [phase, setPhase] = useState<Phase>("record");
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +26,7 @@ export function VisitRecordScreen() {
   const extractAndSave = useCallback(
     async (t: { text: string; utterances: Utterance[]; diarized: boolean; medicalMode: boolean }, sample: boolean) => {
       setPhase("extracting");
-      const { facts, engine } = await postJSON<{ facts: VisitFacts; engine: Engine }>("/api/visit", { utterances: t.utterances });
+      const { facts, engine } = await postJSON<{ facts: VisitFacts; engine: Engine }>("/api/visit", { utterances: t.utterances, language });
       const id = newId();
       healthMemory.saveVisit({
         id,
@@ -80,7 +80,7 @@ export function VisitRecordScreen() {
     }
     setPhase("transcribing");
     try {
-      const t = await transcribeBlob(blob, "visit");
+      const t = await transcribeBlob(blob, "visit", language);
       await extractAndSave(t, false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "We couldn't transcribe that recording. Try again.");

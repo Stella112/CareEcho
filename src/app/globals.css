@@ -217,9 +217,6 @@ a:focus-visible {
 .screen {
   padding-top: max(env(safe-area-inset-top), 18px);
 }
-.device-status {
-  display: none;
-}
 .sheet {
   background: linear-gradient(180deg, rgba(252, 252, 255, 0.94), rgba(243, 244, 255, 0.92));
   backdrop-filter: blur(30px) saturate(150%);
@@ -230,9 +227,6 @@ a:focus-visible {
 @media (min-width: 640px) and (min-height: 560px) {
   .screen {
     padding-top: 58px;
-  }
-  .device-status {
-    display: flex;
   }
 }
 

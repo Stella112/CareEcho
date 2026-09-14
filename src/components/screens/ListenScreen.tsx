@@ -15,7 +15,7 @@ import type { Engine, HealthEntry } from "@/lib/schemas";
 type Phase = "record" | "transcribing" | "understanding" | "error";
 
 export function ListenScreen() {
-  const { go, status } = useShell();
+  const { go, status, language } = useShell();
   const rec = useRecorder({ maxSeconds: 90 });
   const [phase, setPhase] = useState<Phase>("record");
   const [transcript, setTranscript] = useState("");
@@ -32,7 +32,7 @@ export function ListenScreen() {
     async (text: string, isSample: boolean) => {
       setTranscript(text);
       setPhase("understanding");
-      const { entry, engine } = await postJSON<{ entry: HealthEntry; engine: Engine }>("/api/health-entry", { transcript: text });
+      const { entry, engine } = await postJSON<{ entry: HealthEntry; engine: Engine }>("/api/health-entry", { transcript: text, language });
       go({ name: "review", transcript: text, entry, engine, isSample });
     },
     [go],
@@ -51,7 +51,7 @@ export function ListenScreen() {
     }
     setPhase("transcribing");
     try {
-      const t = await transcribeBlob(blob, "symptom");
+      const t = await transcribeBlob(blob, "symptom", language);
       await understand(t.text, false);
     } catch (err) {
       fail(err);

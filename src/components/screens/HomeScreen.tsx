@@ -72,7 +72,7 @@ function QuickAction({ Icon, label, onClick, rec, soon }: { Icon: LucideIcon; la
 }
 
 export function HomeScreen() {
-  const { go, entries, visits, openSheet } = useShell();
+  const { go, entries, visits, openSheet, language } = useShell();
   const stats = useMemo(() => weekStats(entries), [entries]);
   const recent = entries.slice(0, 3);
   const latestVisit = visits[0];
@@ -87,7 +87,7 @@ export function HomeScreen() {
             className="btn-glass flex h-9 items-center gap-1 rounded-full px-3 text-[12.5px] font-semibold text-ink"
             aria-label="Language"
           >
-            <Globe size={15} /> EN <ChevronDown size={13} />
+            <Globe size={15} /> {language.toUpperCase()} <ChevronDown size={13} />
           </button>
           <button
             onClick={() => go({ name: "profile" })}

@@ -39,6 +39,7 @@ export function VisitRecordScreen() {
         isSample: sample,
         engine,
         qa: [],
+        language,
       });
       go({ name: "visit", id, fresh: true });
     },

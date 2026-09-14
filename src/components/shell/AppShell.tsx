@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { healthMemory, type HealthEntryRecord, type VisitRecord } from "@/lib/healthMemory";
+import type { Profile } from "@/lib/profile";
 import { isLanguageCode, type LanguageCode } from "@/lib/languages";
 import type { Engine, HealthEntry } from "@/lib/schemas";
 import { WaveBackground } from "../ui/WaveBackground";
@@ -38,6 +39,7 @@ type Shell = {
   toast: (msg: string) => void;
   status: ServiceStatus;
   language: LanguageCode;
+  profile: Profile;
 };
 
 const ShellContext = createContext<Shell | null>(null);
@@ -108,6 +110,7 @@ export function AppShell() {
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [status, setStatus] = useState<ServiceStatus>(null);
   const [language, setLanguage] = useState<LanguageCode>("en");
+  const [profile, setProfile] = useState<Profile>(() => healthMemory.getProfile());
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -123,6 +126,7 @@ export function AppShell() {
       setVisits(healthMemory.listVisits());
       const savedLanguage = healthMemory.getLanguage();
       if (isLanguageCode(savedLanguage)) setLanguage(savedLanguage);
+      setProfile(healthMemory.getProfile());
     };
     load();
     setView(viewFromHash(window.location.hash, healthMemory.listVisits()));
@@ -157,8 +161,8 @@ export function AppShell() {
   }, []);
 
   const ctx = useMemo<Shell>(
-    () => ({ view, go, entries, visits, openSheet: setSheet, closeSheet: () => setSheet(null), toast, status, language }),
-    [view, go, entries, visits, toast, status, language],
+    () => ({ view, go, entries, visits, openSheet: setSheet, closeSheet: () => setSheet(null), toast, status, language, profile }),
+    [view, go, entries, visits, toast, status, language, profile],
   );
 
   const screenKey = view.name === "visit" ? `visit-${view.id}` : view.name;

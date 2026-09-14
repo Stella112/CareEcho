@@ -7,6 +7,7 @@ import { SafetyNote, ScreenScroll } from "../ui/bits";
 import { LanguageSheet } from "./LanguageSheet";
 import { healthMemory } from "@/lib/healthMemory";
 import { languageName } from "@/lib/languages";
+import { useAuth } from "../auth/AuthProvider";
 
 function Row({ icon, label, value, onClick, soon }: { icon: React.ReactNode; label: string; value?: string; onClick?: () => void; soon?: boolean }) {
   return (
@@ -24,7 +25,8 @@ function Row({ icon, label, value, onClick, soon }: { icon: React.ReactNode; lab
 }
 
 export function ProfileScreen() {
-  const { entries, visits, openSheet, status, toast, language } = useShell();
+  const { entries, visits, openSheet, status, toast, language, profile } = useShell();
+  const { configured, signOut } = useAuth();
 
   const service = (ok: boolean | undefined, name: string) => (
     <div className="flex items-center justify-between px-4 py-3 text-[13.5px]">
@@ -47,10 +49,10 @@ export function ProfileScreen() {
     <ScreenScroll>
       <header className="flex items-center gap-4">
         <span className="grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-[#ffd6e6] via-[#d9d4ff] to-[#b9c6ff] text-[24px] font-bold text-indigo-deep ring-4 ring-white shadow-lg">
-          S
+          {profile.firstName.slice(0, 1).toUpperCase()}
         </span>
         <div>
-          <h1 className="text-[26px] font-bold tracking-[-0.02em] text-ink">Stellamaris</h1>
+          <h1 className="text-[26px] font-bold tracking-[-0.02em] text-ink">{profile.firstName}</h1>
           <p className="text-[13px] text-mute">
             {entries.length} health notes · {visits.length} visits
           </p>
@@ -68,6 +70,12 @@ export function ProfileScreen() {
         {service(status?.assemblyai, "AssemblyAI transcription")}
         {service(status?.llm, "OpenAI (care-plan extraction)")}
       </GlassPanel>
+
+      {configured && (
+        <button onClick={() => signOut()} className="btn-glass mt-5 flex h-12 w-full items-center justify-center rounded-full text-[13px] font-semibold text-ink">
+          Sign out of CareEcho
+        </button>
+      )}
 
       <p className="eyebrow mt-6">Demo data</p>
       <GlassPanel className="mt-2 divide-y divide-white/70">

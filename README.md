@@ -31,7 +31,7 @@ For judging reliability there is a clearly labelled **Load demo recording (sampl
 
 ## Stack
 
-Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion · Lucide · Zod · AssemblyAI · OpenAI Responses API · localStorage · MediaRecorder.
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion · Lucide · Zod · AssemblyAI · OpenAI Responses API · Supabase Auth/Postgres · MediaRecorder.
 
 ## Setup
 
@@ -81,6 +81,18 @@ Provenance for health entries is stamped server-side — the model cannot set it
 ## Languages
 
 The language picker supports AssemblyAI Universal-3.5 Pro's 18 languages: English, Spanish, French, German, Italian, Portuguese, Arabic, Danish, Dutch, Finnish, Hebrew, Hindi, Japanese, Mandarin Chinese, Norwegian, Swedish, Turkish and Vietnamese. The selected language is sent to transcription and used to guide CareEcho extraction and answers. Universal-2 remains the fallback for broader coverage outside these 18.
+
+## Real accounts and Supabase
+
+1. Create a Supabase project.
+2. In the Supabase SQL editor, run supabase/migrations/20260914000000_careecho.sql.
+3. In Authentication URL Configuration, add your local and Vercel /app URLs as redirect URLs.
+4. Enable Google in Authentication Providers if you want the Google button. Email magic links work with the email provider enabled.
+5. Add the Supabase public variables, AssemblyAI key and OpenAI key to local development and Vercel.
+
+The exact variable names are in .env.example. Never put a service-role key in the browser.
+
+When Supabase variables are configured, /app requires sign-in, shows onboarding for a new user, and syncs memory across devices. Try Demo remains available at /app?demo=1.
 
 ## Deploy (Vercel)
 

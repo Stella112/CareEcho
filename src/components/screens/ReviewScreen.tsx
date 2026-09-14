@@ -56,7 +56,7 @@ function Field({ label, value, editing, onChange, placeholder }: { label: string
 }
 
 export function ReviewScreen({ transcript, entry, engine, isSample }: { transcript: string; entry: HealthEntry; engine: Engine; isSample: boolean }) {
-  const { go } = useShell();
+  const { go, language } = useShell();
   const [editing, setEditing] = useState(false);
   const [edited, setEdited] = useState(false);
   const [draft, setDraft] = useState<Draft>(() => toDraft(entry));
@@ -83,6 +83,7 @@ export function ReviewScreen({ transcript, entry, engine, isSample }: { transcri
       engine,
       edited,
       isDemo: isSample || undefined,
+      language,
     });
     setSaved(true);
     setTimeout(() => go({ name: "timeline", highlightId: id }), 1500);

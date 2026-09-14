@@ -4,6 +4,7 @@
  */
 import type { Engine, EvidenceAnswer, HealthEntry, Provenance, Utterance, VisitFacts } from "./schemas";
 import { demoEntries } from "./demoData";
+import { DEFAULT_PROFILE, type Profile } from "./profile";
 
 export type HealthEntryRecord = {
   id: string;
@@ -14,6 +15,7 @@ export type HealthEntryRecord = {
   engine?: Engine;
   edited?: boolean;
   isDemo?: boolean;
+  language?: string;
 };
 
 export type QARecord = {
@@ -37,6 +39,7 @@ export type VisitRecord = {
   isSample: boolean;
   engine: Engine;
   qa: QARecord[];
+  language?: string;
 };
 
 const KEYS = {
@@ -44,6 +47,7 @@ const KEYS = {
   visits: "careecho.v1.visits",
   seeded: "careecho.v1.seeded",
   language: "careecho.v1.language",
+  profile: "careecho.v1.profile",
 };
 const EVENT = "careecho:memory";
 
@@ -98,6 +102,16 @@ export const healthMemory = {
     write(KEYS.seeded, true);
   },
 
+  replaceCloud(entries: HealthEntryRecord[], visits: VisitRecord[]) {
+    write(KEYS.entries, entries);
+    write(KEYS.visits, visits);
+    write(KEYS.seeded, true);
+  },
+
+  exportCloud(): { entries: HealthEntryRecord[]; visits: VisitRecord[] } {
+    return { entries: this.listEntries(), visits: this.listVisits() };
+  },
+
   listEntries(): HealthEntryRecord[] {
     return read<HealthEntryRecord[]>(KEYS.entries, []).sort((a, b) => b.timestamp.localeCompare(a.timestamp));
   },
@@ -130,4 +144,17 @@ export const healthMemory = {
   setLanguage(code: string) {
     write(KEYS.language, code);
   },
+
+  getProfile(): Profile {
+    return { ...DEFAULT_PROFILE, ...read<Partial<Profile>>(KEYS.profile, {}) };
+  },
+
+  setProfile(profile: Profile) {
+    write(KEYS.profile, profile);
+    if (isBrowser()) write(KEYS.language, profile.preferredLanguage);
+  },
 };
+
+function isBrowser() {
+  return typeof window !== "undefined";
+}

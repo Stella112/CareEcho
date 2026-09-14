@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { AppShell } from "@/components/shell/AppShell";
+import { AppGate } from "@/components/auth/AppGate";
 
 export const metadata: Metadata = { title: "CareEcho — Talk to Ada" };
 
 export default function AppPage() {
-  return <AppShell />;
+  return <AppGate />;
 }

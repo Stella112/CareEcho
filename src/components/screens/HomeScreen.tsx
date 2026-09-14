@@ -72,7 +72,7 @@ function QuickAction({ Icon, label, onClick, rec, soon }: { Icon: LucideIcon; la
 }
 
 export function HomeScreen() {
-  const { go, entries, visits, openSheet, language } = useShell();
+  const { go, entries, visits, openSheet, language, profile } = useShell();
   const stats = useMemo(() => weekStats(entries), [entries]);
   const recent = entries.slice(0, 3);
   const latestVisit = visits[0];
@@ -101,7 +101,7 @@ export function HomeScreen() {
 
       <section className="mt-5">
         <p className="text-[15px] text-ink-soft">{greeting()},</p>
-        <h1 className="text-[32px] font-bold leading-[1.1] tracking-[-0.025em] text-ink">Stellamaris</h1>
+        <h1 className="text-[32px] font-bold leading-[1.1] tracking-[-0.025em] text-ink">{profile.firstName}</h1>
         <p className="mt-1 text-[13px] text-mute">Your health memory, in your voice.</p>
       </section>
 
@@ -115,7 +115,7 @@ export function HomeScreen() {
         onClick={() => go({ name: "listen" })}
         className="btn-primary mt-4 flex h-[58px] w-full items-center justify-center gap-2.5 rounded-full text-[17px] font-semibold"
       >
-        <AudioLines size={21} /> Talk to Ada
+        <AudioLines size={21} /> Talk to {profile.assistantName}
       </motion.button>
 
       <div className="mt-4 grid grid-cols-3 gap-2.5">

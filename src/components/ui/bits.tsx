@@ -128,7 +128,7 @@ export function ProcessingSteps({ steps }: { steps: { label: string; state: Step
 /* ------------------------------------------------------------------ */
 
 export function ScreenScroll({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`screen no-scrollbar absolute inset-0 overflow-y-auto px-5 pb-32 ${className}`}>{children}</div>;
+  return <div className={`screen no-scrollbar absolute inset-0 overflow-y-auto px-5 pb-32 lg:pl-[230px] lg:pr-10 lg:pb-10 ${className}`}>{children}</div>;
 }
 
 export function BackButton({ onClick, label = "Back" }: { onClick: () => void; label?: string }) {

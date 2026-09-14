@@ -204,6 +204,16 @@ a:focus-visible {
   }
 }
 
+@media (min-width: 1024px) and (min-height: 560px) {
+  .device {
+    border-radius: 36px;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.9),
+      0 28px 72px -28px rgba(38, 62, 125, 0.38),
+      0 10px 24px -14px rgba(38, 62, 125, 0.18);
+  }
+}
+
 .screen {
   padding-top: max(env(safe-area-inset-top), 18px);
 }

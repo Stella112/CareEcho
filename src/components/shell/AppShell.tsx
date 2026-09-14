@@ -165,7 +165,7 @@ export function AppShell() {
       <main className="relative flex min-h-dvh items-center justify-center">
 
         {/* overflow-clip (not hidden): scrollIntoView can't shift a clipped container sideways */}
-        <div className="device relative h-dvh w-full overflow-clip sm:h-[min(844px,calc(100dvh-48px))] sm:w-[390px]">
+        <div className="device relative h-dvh w-full overflow-clip sm:h-[min(844px,calc(100dvh-48px))] sm:w-[390px] lg:h-[min(820px,calc(100dvh-48px))] lg:w-[min(1180px,calc(100vw-64px))]">
           {/* inner light */}
           <div aria-hidden className="pointer-events-none absolute inset-0 overflow-clip rounded-[inherit]">
             <div className="absolute -left-20 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.9),transparent_65%)]" />
@@ -174,7 +174,7 @@ export function AppShell() {
           </div>
 
           {/* faux status bar — desktop showcase frame only */}
-          <div className="device-status absolute inset-x-0 top-0 z-40 h-[50px] items-center justify-between px-9 text-[14px] font-semibold text-ink">
+          <div className="device-status absolute inset-x-0 top-0 z-40 h-[50px] items-center justify-between px-9 text-[14px] font-semibold text-ink lg:hidden">
             <span>9:41</span>
             <span className="absolute left-1/2 top-[11px] h-[30px] w-[108px] -translate-x-1/2 rounded-full bg-[#0d0f24]" />
             <span className="flex items-center gap-1.5">

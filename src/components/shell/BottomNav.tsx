@@ -17,7 +17,7 @@ export function BottomNav() {
   return (
     <motion.nav
       aria-label="Main"
-      className="nav-glass absolute inset-x-4 bottom-[max(env(safe-area-inset-bottom),14px)] z-30 grid grid-cols-4 rounded-[28px] p-1.5"
+      className="nav-glass absolute inset-x-4 bottom-[max(env(safe-area-inset-bottom),14px)] z-30 grid grid-cols-4 rounded-[28px] p-1.5 lg:inset-y-5 lg:bottom-auto lg:left-5 lg:right-auto lg:w-[190px] lg:grid-cols-1 lg:content-start lg:gap-1.5 lg:rounded-[24px] lg:p-2.5"
       initial={{ y: 40, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: 40, opacity: 0 }}
@@ -30,12 +30,12 @@ export function BottomNav() {
             key={t.key}
             onClick={() => go(t.view)}
             aria-current={isActive ? "page" : undefined}
-            className="relative flex flex-col items-center gap-0.5 rounded-[22px] py-2 text-[10.5px] font-semibold"
+            className="relative flex flex-col items-center gap-0.5 rounded-[22px] py-2 text-[10.5px] font-semibold lg:flex-row lg:gap-3 lg:rounded-[16px] lg:px-3 lg:py-3 lg:text-[13px]"
           >
             {isActive && (
               <motion.span
                 layoutId="nav-pill"
-                className="absolute inset-0 rounded-[22px] bg-white/85 shadow-[0_6px_16px_-8px_rgba(80,86,210,0.45),inset_0_1px_0_white]"
+                className="absolute inset-0 rounded-[22px] bg-white/85 shadow-[0_6px_16px_-8px_rgba(80,86,210,0.45),inset_0_1px_0_white] lg:rounded-[16px]"
                 transition={{ type: "spring", damping: 30, stiffness: 380 }}
               />
             )}

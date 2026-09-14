@@ -185,7 +185,7 @@ export function ReviewScreen({ transcript, entry, engine, isSample }: { transcri
             <>Transcribed by AssemblyAI</>
           )}
           <span>·</span>
-          <span>{engine === "claude" ? "Organized by Claude" : "Organized offline (AI unavailable)"}</span>
+          <span>{engine === "openai" ? "Organized by OpenAI" : "Organized offline (AI unavailable)"}</span>
         </p>
       </motion.div>
 

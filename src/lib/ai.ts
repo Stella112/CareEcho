@@ -1,11 +1,9 @@
 /**
  * The only three AI functions in CareEcho. Server-side only.
- * Claude produces structured JSON (validated with Zod); guards then verify
+ * OpenAI produces structured JSON (validated with Zod); guards then verify
  * every claim against the real transcript before anything reaches the user.
  */
-import Anthropic from "@anthropic-ai/sdk";
-import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
-import type { z } from "zod";
+import { z } from "zod";
 import {
   type Engine,
   type EvidenceAnswer,
@@ -20,26 +18,55 @@ import { finalizeAnswer, finalizeHealthEntry, finalizeVisit, notFound } from "./
 import { answerFromEvidenceRules, extractHealthEntryRules, extractVisitRules } from "./rules";
 import { formatClock } from "./text";
 
-const MODEL = process.env.ANTHROPIC_MODEL || "claude-opus-5";
+const MODEL = process.env.OPENAI_MODEL || "gpt-5.5";
+const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
 
 export function llmConfigured(): boolean {
-  return Boolean(process.env.ANTHROPIC_API_KEY);
+  return Boolean(process.env.OPENAI_API_KEY);
 }
 
-let client: Anthropic | null = null;
+type OpenAIResponse = {
+  output_text?: string;
+  error?: { message?: string };
+  output?: Array<{
+    content?: Array<{ type?: string; text?: string; refusal?: string }>;
+  }>;
+};
 
 async function structured<T extends z.ZodType>(schema: T, system: string, user: string): Promise<z.infer<T>> {
-  client ??= new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY, timeout: 45_000, maxRetries: 1 });
-  const response = await client.messages.parse({
-    model: MODEL,
-    max_tokens: 8000,
-    system,
-    output_config: { effort: "low", format: zodOutputFormat(schema) },
-    messages: [{ role: "user", content: user }],
+  const key = process.env.OPENAI_API_KEY;
+  if (!key) throw new Error("OPENAI_API_KEY is not configured on the server.");
+
+  const response = await fetch(OPENAI_RESPONSES_URL, {
+    method: "POST",
+    headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
+    body: JSON.stringify({
+      model: MODEL,
+      instructions: system,
+      input: user,
+      max_output_tokens: 4000,
+      store: false,
+      text: {
+        format: {
+          type: "json_schema",
+          name: "careecho_output",
+          strict: true,
+          schema: z.toJSONSchema(schema, { target: "openai" }),
+        },
+      },
+    }),
   });
-  if (response.stop_reason === "refusal") throw new Error("Model declined the request");
-  if (!response.parsed_output) throw new Error(`No parsable output (stop_reason: ${response.stop_reason})`);
-  return schema.parse(response.parsed_output);
+
+  const data = (await response.json().catch(() => ({}))) as OpenAIResponse;
+  if (!response.ok) {
+    throw new Error(`OpenAI request failed (${response.status}): ${data.error?.message ?? "Unknown error"}`);
+  }
+
+  const content = data.output?.flatMap((item) => item.content ?? []) ?? [];
+  const text = data.output_text ?? content.find((item) => item.type === "output_text")?.text;
+  if (!text) throw new Error(content.find((item) => item.refusal)?.refusal ?? "No parsable output");
+
+  return schema.parse(JSON.parse(text));
 }
 
 /* ------------------------------------------------------------------ */
@@ -65,7 +92,7 @@ export async function extractHealthEntry(transcript: string): Promise<{ entry: H
   if (llmConfigured()) {
     try {
       const raw = await structured(RawHealthEntrySchema, HEALTH_SYSTEM, `<patient_words>\n${transcript}\n</patient_words>`);
-      return { entry: finalizeHealthEntry(raw), engine: "claude" };
+      return { entry: finalizeHealthEntry(raw), engine: "openai" };
     } catch (err) {
       console.error("[extractHealthEntry] LLM failed — using rules fallback:", err);
     }
@@ -102,7 +129,7 @@ export async function extractVisitInstructions(utterances: Utterance[]): Promise
   if (llmConfigured()) {
     try {
       const raw = await structured(RawVisitSchema, VISIT_SYSTEM, `<transcript>\n${transcriptLines(utterances)}\n</transcript>`);
-      return { facts: finalizeVisit(raw, utterances), engine: "claude" };
+      return { facts: finalizeVisit(raw, utterances), engine: "openai" };
     } catch (err) {
       console.error("[extractVisitInstructions] LLM failed — using rules fallback:", err);
     }
@@ -135,7 +162,7 @@ export async function answerFromEvidence(
       };
       const user = `<transcript>\n${transcriptLines(visit.utterances)}\n</transcript>\n<care_plan>\n${JSON.stringify(plan, null, 2)}\n</care_plan>\n<question>\n${question}\n</question>`;
       const raw = await structured(RawAnswerSchema, ANSWER_SYSTEM, user);
-      return { answer: finalizeAnswer(raw, visit.utterances), engine: "claude" };
+      return { answer: finalizeAnswer(raw, visit.utterances), engine: "openai" };
     } catch (err) {
       console.error("[answerFromEvidence] LLM failed — using rules fallback:", err);
     }

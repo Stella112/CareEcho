@@ -65,7 +65,7 @@ export function ProfileScreen() {
       <p className="eyebrow mt-6">Services</p>
       <GlassPanel className="mt-2 divide-y divide-white/70">
         {service(status?.assemblyai, "AssemblyAI transcription")}
-        {service(status?.llm, "Claude (care-plan extraction)")}
+        {service(status?.llm, "OpenAI (care-plan extraction)")}
       </GlassPanel>
 
       <p className="eyebrow mt-6">Demo data</p>

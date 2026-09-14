@@ -31,13 +31,13 @@ For judging reliability there is a clearly labelled **Load demo recording (sampl
 
 ## Stack
 
-Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion · Lucide · Zod · AssemblyAI · Claude (Anthropic SDK) · localStorage · MediaRecorder.
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion · Lucide · Zod · AssemblyAI · OpenAI Responses API · localStorage · MediaRecorder.
 
 ## Setup
 
 ```bash
 npm install
-cp .env.example .env.local   # add ASSEMBLYAI_API_KEY and ANTHROPIC_API_KEY
+cp .env.example .env.local   # add ASSEMBLYAI_API_KEY and OPENAI_API_KEY
 npm run dev                  # http://localhost:3000/app
 npm test                     # guard + schema tests
 npm run build
@@ -45,14 +45,14 @@ npm run build
 
 API keys are only read server-side (route handlers). Nothing sensitive reaches the browser.
 
-> Next.js gives real environment variables precedence over `.env.local`. If your shell already exports an `ANTHROPIC_API_KEY`, that one wins locally.
+> Next.js gives real environment variables precedence over `.env.local`. Keep both API keys server-side; never prefix them with `NEXT_PUBLIC_`.
 
 ## Architecture
 
 | Path | Purpose |
 | --- | --- |
 | `src/lib/assemblyai.ts` | Pre-recorded REST flow: `POST /v2/upload` → `POST /v2/transcript` → poll `GET /v2/transcript/:id`. `speech_models: ["universal-3-pro","universal-2"]`, `language_code: "en"`. Visits add `speaker_labels: true` and `domain: "medical-v1"`, automatically falling back to plain transcription if either config is rejected. |
-| `src/lib/ai.ts` | The only three AI functions: `extractHealthEntry()`, `extractVisitInstructions()`, `answerFromEvidence()`. Claude structured outputs (`messages.parse` + `zodOutputFormat`), validated with Zod. |
+| `src/lib/ai.ts` | The only three AI functions: `extractHealthEntry()`, `extractVisitInstructions()`, `answerFromEvidence()`. OpenAI Responses API structured outputs, validated with Zod. |
 | `src/lib/guards.ts` | Verifies every model claim against the real transcript before it is shown or saved. |
 | `src/lib/rules.ts` | Deterministic fallback extractors, used only if the LLM is unavailable (the UI labels this). Output passes through the same guards. |
 | `src/lib/healthMemory.ts` | Storage abstraction over localStorage — the swap point for Supabase. |
@@ -85,7 +85,7 @@ English is fully functional. The language picker lists Spanish, French, Hausa, Y
 ## Deploy (Vercel)
 
 1. Import the repo in Vercel (framework preset: Next.js).
-2. Set `ASSEMBLYAI_API_KEY` and `ANTHROPIC_API_KEY` in Project → Settings → Environment Variables.
+2. Set `ASSEMBLYAI_API_KEY` and `OPENAI_API_KEY` in Project → Settings → Environment Variables.
 3. Deploy. Route handlers declare `maxDuration` for transcription polling; uploads are capped at 4 MB (≈8 minutes at the recorder's 48 kbps).
 
 ## Roadmap (not in this MVP)

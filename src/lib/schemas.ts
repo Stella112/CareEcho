@@ -135,4 +135,4 @@ export type EvidenceAnswer = z.infer<typeof EvidenceAnswerSchema>;
 
 export const NOT_FOUND_ANSWER = "I couldn't find that in your saved visit.";
 
-export type Engine = "claude" | "rules";
+export type Engine = "openai" | "rules";

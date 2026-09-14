@@ -455,7 +455,7 @@ export function VisitSummaryScreen({ id, fresh }: { id: string; fresh?: boolean 
         )}
         <p className="mt-3 text-[11px] text-mute">
           {visit.isSample ? "Sample transcript (demo)" : `AssemblyAI${visit.diarized ? " · speaker labels" : ""}${visit.medicalMode ? " · Medical Mode" : ""}`} ·{" "}
-          {visit.engine === "claude" ? "Care plan by Claude" : "Care plan extracted offline"}
+          {visit.engine === "openai" ? "Care plan by OpenAI" : "Care plan extracted offline"}
         </p>
       </section>
 

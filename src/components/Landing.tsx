@@ -15,6 +15,7 @@ import {
   Stethoscope,
 } from "lucide-react";
 import { Ada } from "@/components/Ada";
+import { AdaModel } from "@/components/AdaModel";
 import { WaveBackground } from "@/components/ui/WaveBackground";
 import { IconBubble, Logo, SAFETY_TEXT, SourceBadge } from "@/components/ui/bits";
 
@@ -43,6 +44,7 @@ export function Landing() {
         <nav className="hidden items-center gap-8 text-[14px] font-medium text-ink-soft md:flex">
           <a href="#features" className="hover:text-ink">Features</a>
           <a href="#how" className="hover:text-ink">How it works</a>
+          <a href="#accessibility" className="hover:text-ink">Accessibility</a>
           <a href="#evidence" className="hover:text-ink">Evidence</a>
         </nav>
         <div className="flex items-center gap-2">
@@ -91,7 +93,7 @@ export function Landing() {
             </p>
           </div>
           <div className="absolute -left-4 bottom-6 z-10 hidden sm:block">
-            <Ada size={170} />
+            <AdaModel className="h-[190px] w-[150px]" />
           </div>
           {/* live product shot */}
           <div className="relative ml-auto h-[640px] w-[296px] overflow-hidden rounded-[46px] border border-white shadow-[0_0_0_9px_rgba(255,255,255,0.45),0_0_0_10px_rgba(190,196,255,0.6),0_40px_80px_-30px_rgba(60,64,170,0.5)] sm:mr-2">
@@ -122,6 +124,40 @@ export function Landing() {
               <ArrowRight size={16} className="mt-1 text-mute transition-transform group-hover:translate-x-0.5" />
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* accessibility story */}
+      <section id="accessibility" className="mx-auto max-w-6xl scroll-mt-10 px-5 py-10 sm:px-8 sm:py-16">
+        <div className="prism overflow-hidden rounded-[36px] p-6 sm:p-10">
+          <div className="grid items-center gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:gap-12">
+            <div className="flex justify-center">
+              <AdaModel className="h-[250px] w-[190px] sm:h-[310px] sm:w-[230px]" />
+            </div>
+            <div>
+              <p className="eyebrow">Designed for real life</p>
+              <h2 className="mt-3 max-w-2xl text-[34px] font-semibold leading-[1.08] tracking-[-0.03em] text-ink sm:text-[42px]">
+                Healthcare should still be accessible when typing is not.
+              </h2>
+              <p className="mt-4 max-w-2xl text-[16px] leading-relaxed text-ink-soft">
+                CareEcho is voice-first by design. People who are blind can speak instead of navigating small forms. Older adults can describe changes in their own words, and people with low literacy or busy hands can still build a clear health memory.
+              </p>
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                <div className="glass rounded-[22px] p-4">
+                  <p className="text-[14px] font-semibold text-ink">Speak naturally</p>
+                  <p className="mt-1 text-[12.5px] leading-relaxed text-mute">No typing, medical vocabulary, or complicated menus required.</p>
+                </div>
+                <div className="glass rounded-[22px] p-4">
+                  <p className="text-[14px] font-semibold text-ink">Remember together</p>
+                  <p className="mt-1 text-[12.5px] leading-relaxed text-mute">A trusted timeline keeps symptoms and instructions in one place.</p>
+                </div>
+                <div className="glass rounded-[22px] p-4">
+                  <p className="text-[14px] font-semibold text-ink">Feel confident</p>
+                  <p className="mt-1 text-[12.5px] leading-relaxed text-mute">Ask Ada later and see the words behind every care answer.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

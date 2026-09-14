@@ -15,7 +15,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useMemo } from "react";
-import { Ada } from "../Ada";
+import { AdaModel } from "../AdaModel";
 import { useShell } from "../shell/AppShell";
 import { GlassPanel, PrismCard } from "../ui/Glass";
 import { IconBubble, Logo, SafetyNote, ScreenScroll, symptomIcon } from "../ui/bits";
@@ -105,16 +105,9 @@ export function HomeScreen() {
         <p className="mt-1 text-[13px] text-mute">Your health memory, in your voice.</p>
       </section>
 
-      <section className="relative -mt-2 flex flex-col items-center">
-        <Ada size={170} />
-        <p className="font-hand pointer-events-none absolute right-0 top-10 rotate-[7deg] text-[17px] leading-[1.02] text-indigo/75">
-          I&apos;m Ada.
-          <br />
-          Always here,
-          <br />
-          listening ♡
-        </p>
-        <h2 className="-mt-1 text-[19px] font-semibold tracking-[-0.01em] text-ink">How are you feeling today?</h2>
+      <section className="relative mt-5 flex flex-col items-center">
+        <AdaModel className="h-[168px] w-full max-w-[315px]" />
+        <h2 className="mt-4 text-[19px] font-semibold tracking-[-0.01em] text-ink">How are you feeling today?</h2>
       </section>
 
       <motion.button

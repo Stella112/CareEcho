@@ -224,7 +224,7 @@ const TRANSLATIONS: Partial<Record<LanguageCode, Record<string, string>>> = {
 };
 
 export function ui(language: LanguageCode | string, english: string): string {
-  return TRANSLATIONS[language as LanguageCode]?.[english] ?? ZH[english] ?? english;
+  return language === "zh" ? ZH[english] ?? english : TRANSLATIONS[language as LanguageCode]?.[english] ?? english;
 }
 
 export function uiCount(language: LanguageCode | string, count: number, singular: string, plural: string): string {

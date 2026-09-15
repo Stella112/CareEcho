@@ -23,7 +23,7 @@ export function VisitsScreen() {
           <h1 className="mt-1 text-[30px] font-bold leading-tight tracking-[-0.025em] text-ink">{ui(language, "Your consultations")}</h1>
         </div>
         <span className="mt-2 flex items-center gap-1.5 rounded-full bg-white/75 px-2.5 py-1 text-[10px] font-bold tracking-wider text-rose ring-1 ring-white">
-          <span className="animate-rec h-2 w-2 rounded-full bg-rose" /> REC
+          <span className="animate-rec h-2 w-2 rounded-full bg-rose" /> {ui(language, "REC")}
         </span>
       </header>
 
@@ -82,7 +82,7 @@ export function VisitsScreen() {
                   <div className="min-w-0 flex-1">
                     <p className="text-[11px] text-mute">
                       {dayLabel(v.timestamp)} · {timeLabel(v.timestamp)}
-                      {v.isSample && " · Sample"}
+                      {v.isSample && (" · " + ui(language, "Sample"))}
                     </p>
                     <p className="truncate text-[14.5px] font-semibold text-ink">
                       {v.facts.medications[0]

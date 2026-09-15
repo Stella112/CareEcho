@@ -9,6 +9,7 @@ import { IconBubble, ScreenScroll, SourceBadge, symptomIcon } from "../ui/bits";
 import { dayLabel, timeLabel } from "@/lib/dates";
 import type { HealthEntryRecord, VisitRecord } from "@/lib/healthMemory";
 import { capitalize, formatDose, formatFrequency } from "@/lib/text";
+import { ui } from "@/lib/i18n";
 
 type Item = { kind: "entry"; at: string; entry: HealthEntryRecord } | { kind: "visit"; at: string; visit: VisitRecord };
 
@@ -74,7 +75,7 @@ function EntrySheet({ entry }: { entry: HealthEntryRecord }) {
 }
 
 export function TimelineScreen({ highlightId }: { highlightId?: string }) {
-  const { entries, visits, openSheet, go } = useShell();
+  const { entries, visits, openSheet, go, language } = useShell();
 
   const groups = useMemo(() => {
     const items: Item[] = [
@@ -92,18 +93,18 @@ export function TimelineScreen({ highlightId }: { highlightId?: string }) {
   return (
     <ScreenScroll>
       <header>
-        <p className="eyebrow">Health memory</p>
-        <h1 className="mt-1 text-[30px] font-bold leading-tight tracking-[-0.025em] text-ink">Health Timeline</h1>
-        <p className="mt-1 text-[13px] text-mute">Everything you told Ada — and what your doctor said.</p>
+        <p className="eyebrow">{ui(language, "Health memory")}</p>
+        <h1 className="mt-1 text-[30px] font-bold leading-tight tracking-[-0.025em] text-ink">{ui(language, "Health Timeline")}</h1>
+        <p className="mt-1 text-[13px] text-mute">{ui(language, "Everything you told Ada — and what your doctor said.")}</p>
       </header>
 
       {groups.length === 0 ? (
         <div className="mt-16 flex flex-col items-center text-center">
           <Ada size={130} />
-          <p className="mt-4 text-[17px] font-semibold text-ink">Your timeline is empty</p>
-          <p className="mt-1 text-[13px] text-mute">Tell Ada how you feel to start your health memory.</p>
+          <p className="mt-4 text-[17px] font-semibold text-ink">{ui(language, "Your timeline is empty")}</p>
+          <p className="mt-1 text-[13px] text-mute">{ui(language, "Tell Ada how you feel to start your health memory.")}</p>
           <button onClick={() => go({ name: "listen" })} className="btn-primary mt-5 flex h-12 items-center gap-2 rounded-full px-6 text-[15px] font-semibold">
-            <AudioLines size={18} /> Talk to Ada
+            <AudioLines size={18} /> {ui(language, "Talk to Ada")}
           </button>
         </div>
       ) : (
@@ -142,8 +143,8 @@ export function TimelineScreen({ highlightId }: { highlightId?: string }) {
                           <div className="flex items-center justify-between gap-2">
                             <span className="text-[11px] text-mute">{timeLabel(it.at)}</span>
                             <div className="flex items-center gap-1.5">
-                              {highlighted && <span className="rounded-full bg-indigo px-2 py-[3px] text-[9px] font-bold uppercase tracking-wider text-white">New</span>}
-                              {it.entry.isDemo && <span className="rounded-full bg-white/70 px-2 py-[3px] text-[9px] font-bold uppercase tracking-wider text-mute">Demo</span>}
+                              {highlighted && <span className="rounded-full bg-indigo px-2 py-[3px] text-[9px] font-bold uppercase tracking-wider text-white">{ui(language, "New")}</span>}
+                              {it.entry.isDemo && <span className="rounded-full bg-white/70 px-2 py-[3px] text-[9px] font-bold uppercase tracking-wider text-mute">{ui(language, "Demo")}</span>}
                               <SourceBadge provenance="PATIENT_REPORTED" />
                             </div>
                           </div>
@@ -167,17 +168,17 @@ export function TimelineScreen({ highlightId }: { highlightId?: string }) {
                           <div className="mt-2 flex items-center gap-3">
                             <IconBubble Icon={Stethoscope} tone="cyan" size={36} />
                             <div className="min-w-0 flex-1">
-                              <p className="text-[15.5px] font-semibold text-ink">Doctor visit</p>
+                              <p className="text-[15.5px] font-semibold text-ink">{ui(language, "Doctor visit")}</p>
                               <p className="truncate text-[12.5px] text-ink-soft">
                                 {[
                                   it.visit.facts.medications[0] &&
                                     [capitalize(it.visit.facts.medications[0].name), formatDose(it.visit.facts.medications[0].dose), formatFrequency(it.visit.facts.medications[0].frequency)]
                                       .filter(Boolean)
                                       .join(" "),
-                                  it.visit.facts.followUp && `follow-up ${it.visit.facts.followUp.when}`,
+                                  it.visit.facts.followUp && `${ui(language, "follow-up")} ${it.visit.facts.followUp.when}`,
                                 ]
                                   .filter(Boolean)
-                                  .join(" · ") || "Consultation saved"}
+                                  .join(" · ") || ui(language, "Consultation saved")}
                               </p>
                             </div>
                             <ChevronRight size={18} className="text-mute" />

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { GitCommitVertical, House, Stethoscope, UserRound, type LucideIcon } from "lucide-react";
 import { useShell, type View } from "./AppShell";
+import { ui } from "@/lib/i18n";
 
 const TABS: { key: string; label: string; Icon: LucideIcon; view: View }[] = [
   { key: "home", label: "Home", Icon: House, view: { name: "home" } },
@@ -12,7 +13,7 @@ const TABS: { key: string; label: string; Icon: LucideIcon; view: View }[] = [
 ];
 
 export function BottomNav() {
-  const { view, go } = useShell();
+  const { view, go, language } = useShell();
   const active = view.name === "visit" ? "visits" : view.name;
   return (
     <motion.nav
@@ -40,7 +41,7 @@ export function BottomNav() {
               />
             )}
             <t.Icon size={20} strokeWidth={isActive ? 2.4 : 2} className={`relative ${isActive ? "text-indigo" : "text-mute"}`} />
-            <span className={`relative ${isActive ? "text-indigo" : "text-mute"}`}>{t.label}</span>
+            <span className={`relative ${isActive ? "text-indigo" : "text-mute"}`}>{ui(language, t.label)}</span>
           </button>
         );
       })}

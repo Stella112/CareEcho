@@ -92,8 +92,139 @@ const ZH: Record<string, string> = {
   "Start a visit recording": "开始记录就诊",
 };
 
+const TRANSLATIONS: Partial<Record<LanguageCode, Record<string, string>>> = {
+  es: {
+    Home: "Inicio", Timeline: "Línea de tiempo", Visits: "Visitas", Profile: "Perfil", Language: "Idioma", Select: "Seleccionar",
+    "Coming soon": "Próximamente", Services: "Servicios", Storage: "Almacenamiento", "Demo data": "Datos de demostración",
+    "Health Timeline": "Línea de salud", "Visit Mode": "Modo de visita", "Prepare for Visit": "Prepararse para la visita", Soon: "Próximamente",
+    New: "Nuevo", Demo: "Demostración", "Doctor visit": "Visita médica", "Health memory": "Memoria de salud", "Health note": "Nota de salud",
+    "View all": "Ver todo", Connected: "Conectado", "Checking…": "Comprobando…", "Not configured": "No configurado",
+    "Good morning": "Buenos días", "Good afternoon": "Buenas tardes", "Good evening": "Buenas noches", "Talk to Ada": "Hablar con Ada",
+  },
+  fr: {
+    Home: "Accueil", Timeline: "Chronologie", Visits: "Visites", Profile: "Profil", Language: "Langue", Select: "Sélectionner",
+    "Coming soon": "Bientôt disponible", Services: "Services", Storage: "Stockage", "Demo data": "Données de démonstration",
+    "Health Timeline": "Chronologie santé", "Visit Mode": "Mode consultation", "Prepare for Visit": "Préparer la consultation", Soon: "Bientôt",
+    New: "Nouveau", Demo: "Démo", "Doctor visit": "Visite médicale", "Health memory": "Mémoire santé", "Health note": "Note santé",
+    "View all": "Tout voir", Connected: "Connecté", "Checking…": "Vérification…", "Not configured": "Non configuré",
+    "Good morning": "Bonjour", "Good afternoon": "Bon après-midi", "Good evening": "Bonsoir", "Talk to Ada": "Parler à Ada",
+  },
+  de: {
+    Home: "Startseite", Timeline: "Verlauf", Visits: "Besuche", Profile: "Profil", Language: "Sprache", Select: "Auswählen",
+    "Coming soon": "Demnächst", Services: "Dienste", Storage: "Speicher", "Demo data": "Demodaten",
+    "Health Timeline": "Gesundheitsverlauf", "Visit Mode": "Besuchsmodus", "Prepare for Visit": "Besuch vorbereiten", Soon: "Demnächst",
+    New: "Neu", Demo: "Demo", "Doctor visit": "Arztbesuch", "Health memory": "Gesundheitsgedächtnis", "Health note": "Gesundheitsnotiz",
+    "View all": "Alle anzeigen", Connected: "Verbunden", "Checking…": "Wird geprüft…", "Not configured": "Nicht eingerichtet",
+    "Good morning": "Guten Morgen", "Good afternoon": "Guten Tag", "Good evening": "Guten Abend", "Talk to Ada": "Mit Ada sprechen",
+  },
+  it: {
+    Home: "Home", Timeline: "Cronologia", Visits: "Visite", Profile: "Profilo", Language: "Lingua", Select: "Seleziona",
+    "Coming soon": "In arrivo", Services: "Servizi", Storage: "Archiviazione", "Demo data": "Dati demo",
+    "Health Timeline": "Cronologia salute", "Visit Mode": "Modalità visita", "Prepare for Visit": "Prepara la visita", Soon: "Presto",
+    New: "Nuovo", Demo: "Demo", "Doctor visit": "Visita medica", "Health memory": "Memoria sanitaria", "Health note": "Nota sanitaria",
+    "View all": "Vedi tutto", Connected: "Connesso", "Checking…": "Controllo…", "Not configured": "Non configurato",
+    "Good morning": "Buongiorno", "Good afternoon": "Buon pomeriggio", "Good evening": "Buonasera", "Talk to Ada": "Parla con Ada",
+  },
+  pt: {
+    Home: "Início", Timeline: "Linha do tempo", Visits: "Visitas", Profile: "Perfil", Language: "Idioma", Select: "Selecionar",
+    "Coming soon": "Em breve", Services: "Serviços", Storage: "Armazenamento", "Demo data": "Dados de demonstração",
+    "Health Timeline": "Linha de saúde", "Visit Mode": "Modo visita", "Prepare for Visit": "Preparar visita", Soon: "Em breve",
+    New: "Novo", Demo: "Demonstração", "Doctor visit": "Consulta médica", "Health memory": "Memória de saúde", "Health note": "Nota de saúde",
+    "View all": "Ver tudo", Connected: "Conectado", "Checking…": "Verificando…", "Not configured": "Não configurado",
+    "Good morning": "Bom dia", "Good afternoon": "Boa tarde", "Good evening": "Boa noite", "Talk to Ada": "Falar com Ada",
+  },
+  ar: {
+    Home: "الرئيسية", Timeline: "الخط الزمني", Visits: "الزيارات", Profile: "الملف الشخصي", Language: "اللغة", Select: "اختيار",
+    "Coming soon": "قريبًا", Services: "الخدمات", Storage: "التخزين", "Demo data": "بيانات تجريبية",
+    "Health Timeline": "الخط الزمني الصحي", "Visit Mode": "وضع الزيارة", "Prepare for Visit": "الاستعداد للزيارة", Soon: "قريبًا",
+    New: "جديد", Demo: "تجريبي", "Doctor visit": "زيارة الطبيب", "Health memory": "الذاكرة الصحية", "Health note": "ملاحظة صحية",
+    "View all": "عرض الكل", Connected: "متصل", "Checking…": "جارٍ التحقق…", "Not configured": "غير مُعد",
+    "Good morning": "صباح الخير", "Good afternoon": "مساء الخير", "Good evening": "مساء الخير", "Talk to Ada": "تحدث مع Ada",
+  },
+  da: {
+    Home: "Hjem", Timeline: "Tidslinje", Visits: "Besøg", Profile: "Profil", Language: "Sprog", Select: "Vælg",
+    "Coming soon": "Kommer snart", Services: "Tjenester", Storage: "Lager", "Demo data": "Demodata",
+    "Health Timeline": "Sundhedstidslinje", "Visit Mode": "Besøgstilstand", "Prepare for Visit": "Forbered besøg", Soon: "Snart",
+    New: "Ny", Demo: "Demo", "Doctor visit": "Lægebesøg", "Health memory": "Sundhedshukommelse", "Health note": "Sundhedsnotat",
+    "View all": "Se alle", Connected: "Forbundet", "Checking…": "Kontrollerer…", "Not configured": "Ikke konfigureret",
+    "Good morning": "Godmorgen", "Good afternoon": "God eftermiddag", "Good evening": "Godaften", "Talk to Ada": "Tal med Ada",
+  },
+  nl: {
+    Home: "Home", Timeline: "Tijdlijn", Visits: "Bezoeken", Profile: "Profiel", Language: "Taal", Select: "Selecteren",
+    "Coming soon": "Binnenkort", Services: "Diensten", Storage: "Opslag", "Demo data": "Demogegevens",
+    "Health Timeline": "Gezondheidstijdlijn", "Visit Mode": "Bezoekmodus", "Prepare for Visit": "Bezoek voorbereiden", Soon: "Binnenkort",
+    New: "Nieuw", Demo: "Demo", "Doctor visit": "Doktersbezoek", "Health memory": "Gezondheidsgeheugen", "Health note": "Gezondheidsnotitie",
+    "View all": "Alles bekijken", Connected: "Verbonden", "Checking…": "Controleren…", "Not configured": "Niet ingesteld",
+    "Good morning": "Goedemorgen", "Good afternoon": "Goedemiddag", "Good evening": "Goedenavond", "Talk to Ada": "Praat met Ada",
+  },
+  fi: {
+    Home: "Koti", Timeline: "Aikajana", Visits: "Käynnit", Profile: "Profiili", Language: "Kieli", Select: "Valitse",
+    "Coming soon": "Tulossa pian", Services: "Palvelut", Storage: "Tallennus", "Demo data": "Demotiedot",
+    "Health Timeline": "Terveysaikajana", "Visit Mode": "Vastaanottotila", "Prepare for Visit": "Valmistaudu käyntiin", Soon: "Pian",
+    New: "Uusi", Demo: "Demo", "Doctor visit": "Lääkärikäynti", "Health memory": "Terveysmuisti", "Health note": "Terveysmerkintä",
+    "View all": "Näytä kaikki", Connected: "Yhdistetty", "Checking…": "Tarkistetaan…", "Not configured": "Ei määritetty",
+    "Good morning": "Hyvää huomenta", "Good afternoon": "Hyvää iltapäivää", "Good evening": "Hyvää iltaa", "Talk to Ada": "Puhu Adalle",
+  },
+  he: {
+    Home: "בית", Timeline: "ציר זמן", Visits: "ביקורים", Profile: "פרופיל", Language: "שפה", Select: "בחירה",
+    "Coming soon": "בקרוב", Services: "שירותים", Storage: "אחסון", "Demo data": "נתוני הדגמה",
+    "Health Timeline": "ציר בריאות", "Visit Mode": "מצב ביקור", "Prepare for Visit": "הכנה לביקור", Soon: "בקרוב",
+    New: "חדש", Demo: "הדגמה", "Doctor visit": "ביקור אצל רופא", "Health memory": "זיכרון בריאותי", "Health note": "הערת בריאות",
+    "View all": "הצג הכול", Connected: "מחובר", "Checking…": "בודק…", "Not configured": "לא מוגדר",
+    "Good morning": "בוקר טוב", "Good afternoon": "צהריים טובים", "Good evening": "ערב טוב", "Talk to Ada": "דבר עם Ada",
+  },
+  hi: {
+    Home: "होम", Timeline: "टाइमलाइन", Visits: "विज़िट", Profile: "प्रोफ़ाइल", Language: "भाषा", Select: "चुनें",
+    "Coming soon": "जल्द आ रहा है", Services: "सेवाएँ", Storage: "स्टोरेज", "Demo data": "डेमो डेटा",
+    "Health Timeline": "स्वास्थ्य टाइमलाइन", "Visit Mode": "विज़िट मोड", "Prepare for Visit": "विज़िट की तैयारी", Soon: "जल्द",
+    New: "नया", Demo: "डेमो", "Doctor visit": "डॉक्टर की विज़िट", "Health memory": "स्वास्थ्य स्मृति", "Health note": "स्वास्थ्य नोट",
+    "View all": "सभी देखें", Connected: "कनेक्टेड", "Checking…": "जाँच हो रही है…", "Not configured": "कॉन्फ़िगर नहीं है",
+    "Good morning": "सुप्रभात", "Good afternoon": "नमस्कार", "Good evening": "शुभ संध्या", "Talk to Ada": "Ada से बात करें",
+  },
+  ja: {
+    Home: "ホーム", Timeline: "タイムライン", Visits: "診察", Profile: "プロフィール", Language: "言語", Select: "選択",
+    "Coming soon": "近日公開", Services: "サービス", Storage: "ストレージ", "Demo data": "デモデータ",
+    "Health Timeline": "健康タイムライン", "Visit Mode": "診察モード", "Prepare for Visit": "診察の準備", Soon: "近日公開",
+    New: "新規", Demo: "デモ", "Doctor visit": "診察", "Health memory": "健康メモリー", "Health note": "健康メモ",
+    "View all": "すべて見る", Connected: "接続済み", "Checking…": "確認中…", "Not configured": "未設定",
+    "Good morning": "おはようございます", "Good afternoon": "こんにちは", "Good evening": "こんばんは", "Talk to Ada": "Adaと話す",
+  },
+  no: {
+    Home: "Hjem", Timeline: "Tidslinje", Visits: "Besøk", Profile: "Profil", Language: "Språk", Select: "Velg",
+    "Coming soon": "Kommer snart", Services: "Tjenester", Storage: "Lagring", "Demo data": "Demodata",
+    "Health Timeline": "Helsetidslinje", "Visit Mode": "Besøksmodus", "Prepare for Visit": "Forbered besøket", Soon: "Snart",
+    New: "Ny", Demo: "Demo", "Doctor visit": "Legebesøk", "Health memory": "Helseminne", "Health note": "Helsenotat",
+    "View all": "Se alle", Connected: "Tilkoblet", "Checking…": "Sjekker…", "Not configured": "Ikke konfigurert",
+    "Good morning": "God morgen", "Good afternoon": "God ettermiddag", "Good evening": "God kveld", "Talk to Ada": "Snakk med Ada",
+  },
+  sv: {
+    Home: "Hem", Timeline: "Tidslinje", Visits: "Besök", Profile: "Profil", Language: "Språk", Select: "Välj",
+    "Coming soon": "Kommer snart", Services: "Tjänster", Storage: "Lagring", "Demo data": "Demodata",
+    "Health Timeline": "Hälsotidslinje", "Visit Mode": "Besöksläge", "Prepare for Visit": "Förbered besöket", Soon: "Snart",
+    New: "Ny", Demo: "Demo", "Doctor visit": "Läkarbesök", "Health memory": "Hälsominne", "Health note": "Hälsoanteckning",
+    "View all": "Visa alla", Connected: "Ansluten", "Checking…": "Kontrollerar…", "Not configured": "Inte konfigurerad",
+    "Good morning": "God morgon", "Good afternoon": "God eftermiddag", "Good evening": "God kväll", "Talk to Ada": "Prata med Ada",
+  },
+  tr: {
+    Home: "Ana Sayfa", Timeline: "Zaman Çizelgesi", Visits: "Ziyaretler", Profile: "Profil", Language: "Dil", Select: "Seç",
+    "Coming soon": "Yakında", Services: "Hizmetler", Storage: "Depolama", "Demo data": "Demo verileri",
+    "Health Timeline": "Sağlık zaman çizelgesi", "Visit Mode": "Ziyaret modu", "Prepare for Visit": "Ziyarete hazırlan", Soon: "Yakında",
+    New: "Yeni", Demo: "Demo", "Doctor visit": "Doktor ziyareti", "Health memory": "Sağlık hafızası", "Health note": "Sağlık notu",
+    "View all": "Tümünü gör", Connected: "Bağlandı", "Checking…": "Kontrol ediliyor…", "Not configured": "Yapılandırılmadı",
+    "Good morning": "Günaydın", "Good afternoon": "Tünaydın", "Good evening": "İyi akşamlar", "Talk to Ada": "Ada ile konuş",
+  },
+  vi: {
+    Home: "Trang chủ", Timeline: "Dòng thời gian", Visits: "Lần khám", Profile: "Hồ sơ", Language: "Ngôn ngữ", Select: "Chọn",
+    "Coming soon": "Sắp ra mắt", Services: "Dịch vụ", Storage: "Bộ nhớ", "Demo data": "Dữ liệu demo",
+    "Health Timeline": "Dòng thời gian sức khỏe", "Visit Mode": "Chế độ khám", "Prepare for Visit": "Chuẩn bị đi khám", Soon: "Sắp có",
+    New: "Mới", Demo: "Demo", "Doctor visit": "Lần khám bác sĩ", "Health memory": "Bộ nhớ sức khỏe", "Health note": "Ghi chú sức khỏe",
+    "View all": "Xem tất cả", Connected: "Đã kết nối", "Checking…": "Đang kiểm tra…", "Not configured": "Chưa cấu hình",
+    "Good morning": "Chào buổi sáng", "Good afternoon": "Chào buổi chiều", "Good evening": "Chào buổi tối", "Talk to Ada": "Nói chuyện với Ada",
+  },
+};
+
 export function ui(language: LanguageCode | string, english: string): string {
-  return language === "zh" ? ZH[english] ?? english : english;
+  return TRANSLATIONS[language as LanguageCode]?.[english] ?? ZH[english] ?? english;
 }
 
 export function uiCount(language: LanguageCode | string, count: number, singular: string, plural: string): string {

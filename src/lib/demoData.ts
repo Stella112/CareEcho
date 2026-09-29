@@ -1,82 +1,92 @@
-import type { Utterance } from "./schemas";
-import type { HealthEntryRecord } from "./healthMemory";
+import type { Evidence, Utterance, VisitFacts } from "./schemas";
+import type { HealthEntryRecord, VisitRecord } from "./healthMemory";
 
-/** Seeded demo week. Clearly flagged isDemo — never presented as live transcription. */
-export function demoEntries(now = new Date()): HealthEntryRecord[] {
-  const at = (daysAgo: number, h: number, m: number) => {
-    const d = new Date(now);
-    d.setDate(d.getDate() - daysAgo);
-    d.setHours(h, m, 0, 0);
-    if (daysAgo === 0 && d.getTime() > now.getTime() - 30 * 60_000) {
-      // keep "today" in the past (so new recordings sort above it) without slipping into yesterday
-      const startOfToday = new Date(now);
-      startOfToday.setHours(0, 1, 0, 0);
-      d.setTime(Math.max(startOfToday.getTime(), now.getTime() - 30 * 60_000));
-    }
-    return d.toISOString();
-  };
-  return [
-    {
-      id: "demo-1",
-      timestamp: at(3, 8, 20),
-      rawTranscript: "I woke up with a headache this morning. It's a dull pain behind my eyes.",
-      structuredData: {
-        symptoms: [{ name: "headache", duration: null, onset: "this morning", severity: "dull", associatedSymptoms: [] }],
-        summary: "Dull headache behind the eyes since waking.",
-        sourceType: "PATIENT_REPORTED",
-      },
+const demoDate = (day: number, hour: number, minute: number) =>
+  new Date(`2026-09-${String(day).padStart(2, "0")}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00+01:00`).toISOString();
+
+/** Deterministic submission fixture: four patient-reported dizziness notes. */
+export function demoEntries(): HealthEntryRecord[] {
+  const reports = [
+    [18, 8, 20, "I felt dizzy when I stood up this morning. It lasted about a minute."],
+    [21, 19, 5, "I felt dizzy again this evening, especially when I got up from the sofa."],
+    [25, 13, 40, "The dizziness came back after lunch today and I needed to sit down."],
+    [29, 9, 15, "I was dizzy again this morning. This is the fourth time I've noticed it."],
+  ] as const;
+  return reports.map(([day, hour, minute, rawTranscript], index) => ({
+    id: `demo-dizziness-${index + 1}`,
+    timestamp: demoDate(day, hour, minute),
+    rawTranscript,
+    structuredData: {
+      symptoms: [{ name: "dizziness", duration: index === 0 ? "1 minute" : null, onset: index === 2 ? "after lunch" : index === 1 ? "this evening" : "this morning", severity: null, associatedSymptoms: [] }],
+      summary: index === 3 ? "Fourth reported episode of dizziness." : "Another patient-reported episode of dizziness.",
       sourceType: "PATIENT_REPORTED",
-      isDemo: true,
     },
-    {
-      id: "demo-2",
-      timestamp: at(2, 19, 5),
-      rawTranscript: "The headache came back this afternoon and I've been really tired all day.",
-      structuredData: {
-        symptoms: [{ name: "headache", duration: null, onset: "this afternoon", severity: null, associatedSymptoms: ["fatigue"] }],
-        summary: "Headache returned in the afternoon, with fatigue all day.",
-        sourceType: "PATIENT_REPORTED",
-      },
-      sourceType: "PATIENT_REPORTED",
-      isDemo: true,
-    },
-    {
-      id: "demo-3",
-      timestamp: at(1, 13, 40),
-      rawTranscript: "I felt dizzy when I stood up after lunch. It passed after a minute.",
-      structuredData: {
-        symptoms: [{ name: "dizziness", duration: "1 minute", onset: "after lunch", severity: null, associatedSymptoms: [] }],
-        summary: "Felt dizzy while standing up; passed after a minute.",
-        sourceType: "PATIENT_REPORTED",
-      },
-      sourceType: "PATIENT_REPORTED",
-      isDemo: true,
-    },
-    {
-      id: "demo-4",
-      timestamp: at(0, 9, 15),
-      rawTranscript: "Still a headache today, but it's less severe than yesterday.",
-      structuredData: {
-        symptoms: [{ name: "headache", duration: null, onset: "today", severity: "less severe", associatedSymptoms: [] }],
-        summary: "Headache today, less severe than before.",
-        sourceType: "PATIENT_REPORTED",
-      },
-      sourceType: "PATIENT_REPORTED",
-      isDemo: true,
-    },
-  ];
+    sourceType: "PATIENT_REPORTED",
+    isDemo: true,
+    language: "en",
+  }));
+}
+
+const priorEvidence: Evidence = {
+  quote: "Continue metformin 500 milligrams once daily.",
+  role: "CLINICIAN",
+  provenance: "CLINICIAN_SAID",
+  speakerLabel: "A",
+  startMs: 900,
+  context: null,
+};
+
+const priorFacts: VisitFacts = {
+  medications: [{ name: "metformin", dose: "500 mg", frequency: "once daily", duration: null, evidence: priorEvidence }],
+  followUp: null,
+  instructions: [],
+  patientStatements: [],
+  excluded: [],
+};
+
+/** Prior confirmed instruction used to prove longitudinal conflict handling. */
+export function demoVisits(): VisitRecord[] {
+  const timestamp = demoDate(10, 10, 30);
+  return [{
+    id: "demo-prior-metformin",
+    timestamp,
+    transcript: priorEvidence.quote,
+    utterances: [{ speaker: "A", text: priorEvidence.quote, startMs: 900, endMs: 3900 }],
+    facts: priorFacts,
+    diarized: true,
+    medicalMode: false,
+    isSample: true,
+    engine: "rules",
+    qa: [],
+    language: "en",
+    clinicianInstructions: [{
+      id: "instruction-demo-prior-metformin-0",
+      visitId: "demo-prior-metformin",
+      kind: "MEDICATION",
+      status: "CONFIRMED",
+      medication: "metformin",
+      dose: "500 mg",
+      frequency: "once daily",
+      duration: null,
+      evidence: priorEvidence,
+      createdAt: timestamp,
+      confirmedAt: timestamp,
+      supersededBy: null,
+      corrected: false,
+    }],
+  }];
 }
 
 /** Sample consultation for "Load demo recording". Labelled as a sample everywhere it appears. */
 export const SAMPLE_CONSULTATION: Utterance[] = [
   {
     speaker: "A",
-    text: "I'm prescribing amoxicillin 500 milligrams three times daily for seven days. Come back if your symptoms worsen.",
+    text: "Change the metformin to 500 milligrams twice daily.",
     startMs: 1200,
-    endMs: 7400,
+    endMs: 5100,
   },
-  { speaker: "B", text: "Should I take it with food?", startMs: 8100, endMs: 9500 },
-  { speaker: "A", text: "Yes. I'd like to see you again next Thursday.", startMs: 10100, endMs: 13300 },
+  { speaker: "B", text: "Should I keep taking it with meals?", startMs: 5600, endMs: 7600 },
+  { speaker: "A", text: "Yes. I'd like to see you again next Thursday.", startMs: 8100, endMs: 11900 },
 ];
 
-export const SAMPLE_SYMPTOM = "I've had headaches for three days. Yesterday I also felt dizzy.";
+export const SAMPLE_SYMPTOM = "I've felt dizzy four times this week, usually when I stand up.";

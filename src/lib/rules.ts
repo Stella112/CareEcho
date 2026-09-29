@@ -72,7 +72,7 @@ export function extractHealthEntryRules(transcript: string): RawHealthEntry {
 type Sentence = { text: string; speaker: string | null; role: SpeakerRole };
 
 const CLINICIAN_CUES =
-  /\b(prescrib|milligram|mg\b|come back|return if|follow[- ]?up|see you again|take (it|this|one)|times (a|per) day|daily|i('d| would) like to see you)/i;
+  /\b(prescrib|change the|increase the|decrease the|milligram|mg\b|come back|return if|follow[- ]?up|see you again|take (it|this|one)|times (a|per) day|daily|i('d| would) like to see you)/i;
 
 function classify(utterances: Utterance[]): Sentence[] {
   const sentences: Sentence[] = utterances.flatMap((u) =>
@@ -122,7 +122,7 @@ export function extractVisitRules(utterances: Utterance[]): RawVisit {
 
     const med =
       d.match(
-        /\b(?:prescrib(?:e|ing)|start(?:ing)? you on|put(?:ting)? you on|take|taking)\s+(?:you\s+)?([A-Za-z][A-Za-z-]{3,})\s*,?\s*(\d+(?:\.\d+)?)\s*(mg|milligrams?|mcg|micrograms?|ml|millilit(?:er|re)s?|grams?|g|units?)\b/i,
+        /\b(?:prescrib(?:e|ing)|start(?:ing)? you on|put(?:ting)? you on|take|taking|change(?: the)?|increase(?: the)?|decrease(?: the)?|adjust(?: the)?)\s+(?:you\s+)?([A-Za-z][A-Za-z-]{3,})\s+(?:to\s+)?(\d+(?:\.\d+)?)\s*(mg|milligrams?|mcg|micrograms?|ml|millilit(?:er|re)s?|grams?|g|units?)\b/i,
       ) ?? d.match(/\bprescrib(?:e|ing)\s+(?:you\s+)?([A-Za-z][A-Za-z-]{3,})/i);
     if (med && !/^(something|some|you|them|this|that|medication|medicine)$/i.test(med[1])) {
       const freq = d.match(/\b(once|twice|\d+ times)\s+(?:a |per )?(day|daily)\b/i);

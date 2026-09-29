@@ -25,11 +25,9 @@ import { healthMemory, type HealthEntryRecord } from "@/lib/healthMemory";
 import { capitalize, formatDose, formatFrequency } from "@/lib/text";
 import { ui } from "@/lib/i18n";
 
-function weekStats(entries: HealthEntryRecord[]) {
-  const since = Date.now() - 7 * 86_400_000;
+function memoryStats(entries: HealthEntryRecord[]) {
   const counts = new Map<string, { count: number; last: string }>();
   for (const e of entries) {
-    if (Date.parse(e.timestamp) < since) continue;
     const names = new Set(e.structuredData.symptoms.flatMap((s) => [s.name, ...s.associatedSymptoms]));
     for (const n of names) {
       const prev = counts.get(n);
@@ -44,7 +42,7 @@ function weekStats(entries: HealthEntryRecord[]) {
 
 function StatTile({ Icon, value, label, sub }: { Icon: LucideIcon; value: string | number; label: string; sub: string }) {
   return (
-    <div className="glass-inset flex flex-col rounded-[20px] p-3">
+    <div className="glass-inset flex min-w-0 flex-col rounded-[20px] p-3">
       <div className="flex items-center gap-1.5">
         <Icon size={15} className="text-indigo" strokeWidth={2.3} />
         <span className={`font-bold tracking-tight text-ink ${typeof value === "number" ? "text-[22px]" : "text-[17px]"}`}>{value}</span>
@@ -60,7 +58,7 @@ function QuickAction({ Icon, label, onClick, rec, soon, language }: { Icon: Luci
     <button
       onClick={onClick}
       disabled={soon}
-      className="glass relative flex h-[96px] flex-col justify-between rounded-[22px] p-3 text-left transition-transform active:scale-[0.97] disabled:cursor-default"
+      className="glass relative flex h-[96px] min-w-0 flex-col justify-between rounded-[22px] p-3 text-left transition-transform active:scale-[0.97] disabled:cursor-default"
     >
       <div className="flex w-full items-start justify-between">
         <IconBubble Icon={Icon} size={34} tone={rec ? "cyan" : soon ? "lavender" : "indigo"} />
@@ -74,7 +72,7 @@ function QuickAction({ Icon, label, onClick, rec, soon, language }: { Icon: Luci
 
 export function HomeScreen() {
   const { go, entries, visits, openSheet, language, profile } = useShell();
-  const stats = useMemo(() => weekStats(entries), [entries]);
+  const stats = useMemo(() => memoryStats(entries), [entries]);
   const recent = entries.slice(0, 3);
   const latestVisit = visits[0];
 
@@ -140,7 +138,7 @@ export function HomeScreen() {
 
       <GlassPanel className="mt-4 p-4">
         <div className="flex items-center justify-between">
-          <span className="eyebrow">{ui(language, "This week")}</span>
+          <span className="eyebrow">{ui(language, "Health memory")}</span>
           <button onClick={() => go({ name: "timeline" })} className="flex items-center text-[12px] font-semibold text-indigo">
             {ui(language, "See details")} <ChevronRight size={14} />
           </button>
@@ -150,7 +148,7 @@ export function HomeScreen() {
             <StatTile key={s.name} Icon={symptomIcon(s.name)} value={s.count} label={capitalize(s.name)} sub={ui(language, s.count === 1 ? "report" : "reports")} />
           ))}
           {stats.length < 2 &&
-            Array.from({ length: 2 - stats.length }, (_, i) => <StatTile key={`e${i}`} Icon={Sparkles} value="—" label={ui(language, "No reports")} sub={ui(language, "this week")} />)}
+            Array.from({ length: 2 - stats.length }, (_, i) => <StatTile key={`e${i}`} Icon={Sparkles} value="—" label={ui(language, "No reports")} sub={ui(language, "Nothing yet")} />)}
           <StatTile
             Icon={CalendarClock}
             value={entries[0] ? dayLabel(entries[0].timestamp) : "—"}

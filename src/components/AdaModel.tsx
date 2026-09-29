@@ -11,7 +11,7 @@ export function AdaModel({ className = "" }: { className?: string }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
     >
-      <img src="/ada-character.png" alt="Ada, your CareEcho health companion" className="h-full w-full object-contain drop-shadow-[0_18px_28px_rgba(86,94,205,0.28)]" />
+      <img src="/ada-character.webp" alt="Ada, your CareEcho health companion" width={1145} height={1374} decoding="async" className="h-full w-full object-contain drop-shadow-[0_18px_28px_rgba(86,94,205,0.28)]" />
     </motion.div>
   );
 }

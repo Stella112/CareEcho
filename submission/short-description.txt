@@ -1,0 +1,1 @@
+CareEcho is a patient-owned voice agent that remembers symptoms between appointments, retrieves that history during consultations, and turns clinician instructions into confirmed, evidence-backed health memory.

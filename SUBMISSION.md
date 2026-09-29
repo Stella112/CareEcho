@@ -1,0 +1,31 @@
+# CareEcho
+
+## Tagline
+
+Your health memory, in your voice.
+
+## Short description
+
+CareEcho is a patient-owned voice agent that remembers symptoms between appointments, retrieves that history during consultations, and turns clinician instructions into confirmed, evidence-backed health memory.
+
+## Long description
+
+Healthcare does not only happen in the consultation room. Symptoms appear, change, and repeat between appointments, yet patients are expected to remember when they began, how often they happened, and exactly what a clinician later told them. That burden is especially difficult for blind and low-vision users, older adults, people with low literacy, and anyone for whom typing or navigating a complex portal is a barrier.
+
+CareEcho is a patient-owned voice agent for that missing continuity. Before a visit, a patient talks naturally to Ada, their CareEcho companion. AssemblyAI turns the recording into clean text, and CareEcho proposes a dated symptom entry while preserving the patient's original words. Over time, those entries form a longitudinal health timeline that can answer grounded questions such as when dizziness was first reported and how often it appeared.
+
+During a consultation, CareEcho can record with consent. AssemblyAI provides the transcript, utterance timing, speaker labels, and Medical Mode when available. CareEcho then extracts only medication instructions, follow-ups, and advice that can be grounded in the recording. Every important item keeps provenance and an exact source excerpt.
+
+The submission's core safety feature is Confirm-to-Commit. A clinician statement such as “Change the metformin to 500 milligrams twice daily” creates a `PROPOSED` instruction—not confirmed memory. CareEcho deterministically compares it with the patient's latest confirmed instruction. In the demo, it finds metformin 500 mg once daily and displays both records with the message that they differ. CareEcho does not decide whether either dose is correct. The patient can Confirm, Correct, or Don't save. Only explicit confirmation changes the new instruction to `CONFIRMED`; the earlier record becomes `SUPERSEDED` rather than being deleted.
+
+After the visit, the patient can ask, “What changed with my medication today?” CareEcho answers from the confirmed ledger and exposes View source. The evidence sheet shows who spoke, the transcript timestamp, the exact words, and what CareEcho saved. Unsupported questions are refused rather than guessed. Two rules govern the product: **No source → no claim**, and **No confirmation → no clinical memory change**.
+
+AssemblyAI is essential, not decorative. Its transcription output and timestamps establish the evidence boundary used by every downstream extraction and answer. Universal-3.5 Pro supports the selected prerecorded multilingual flow, while speaker handling helps separate patient statements from clinician claims. A deterministic, clearly labelled sample path remains available so judges can evaluate the safety workflow even if an external service is unavailable.
+
+CareEcho is original because it is not another symptom checker or generic consultation summary. It combines patient-owned longitudinal voice memory, confirmation-gated clinical changes, deterministic instruction conflict detection, and evidence-linked recall. The business value is continuity: helping patients organize what happened between visits and remember what changed, without claiming diagnosis, clinical validation, or regulatory approval.
+
+## Links
+
+- Live app: https://careecho-two.vercel.app
+- Source: https://github.com/Stella112/CareEcho
+- Demo script: [submission/demo-script.md](submission/demo-script.md)

@@ -116,6 +116,39 @@ export const VisitFactsSchema = z.object({
 export type VisitFacts = z.infer<typeof VisitFactsSchema>;
 
 /* ------------------------------------------------------------------ */
+/* Confirm-to-commit clinician instructions                            */
+/* ------------------------------------------------------------------ */
+
+export const INSTRUCTION_STATUSES = ["PROPOSED", "CONFIRMED", "REJECTED", "SUPERSEDED"] as const;
+export const InstructionStatusSchema = z.enum(INSTRUCTION_STATUSES);
+export type InstructionStatus = z.infer<typeof InstructionStatusSchema>;
+
+export const ClinicianInstructionSchema = z.object({
+  id: z.string(),
+  visitId: z.string(),
+  kind: z.literal("MEDICATION"),
+  status: InstructionStatusSchema,
+  medication: z.string(),
+  dose: z.string().nullable(),
+  frequency: z.string().nullable(),
+  duration: z.string().nullable(),
+  evidence: EvidenceSchema,
+  createdAt: z.string(),
+  confirmedAt: z.string().nullable().default(null),
+  supersededBy: z.string().nullable().default(null),
+  corrected: z.boolean().default(false),
+});
+export type ClinicianInstruction = z.infer<typeof ClinicianInstructionSchema>;
+
+export const InstructionCorrectionSchema = z.object({
+  medication: z.string().trim().min(1).max(120),
+  dose: z.string().trim().max(80).nullable(),
+  frequency: z.string().trim().max(80).nullable(),
+  duration: z.string().trim().max(80).nullable(),
+});
+export type InstructionCorrection = z.infer<typeof InstructionCorrectionSchema>;
+
+/* ------------------------------------------------------------------ */
 /* Evidence answers                                                    */
 /* ------------------------------------------------------------------ */
 

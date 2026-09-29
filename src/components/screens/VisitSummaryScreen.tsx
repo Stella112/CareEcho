@@ -3,11 +3,13 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CalendarCheck,
+  Check,
   ChevronDown,
   ClipboardCheck,
   FlaskConical,
   LoaderCircle,
   Mic,
+  Pencil,
   Pill,
   Quote,
   SearchX,
@@ -15,6 +17,8 @@ import {
   ShieldCheck,
   Sparkles,
   Square,
+  TriangleAlert,
+  X,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Ada } from "../Ada";
@@ -24,9 +28,10 @@ import { GlassPanel, PrismCard } from "../ui/Glass";
 import { BackButton, IconBubble, SafetyNote, ScreenScroll, SourceBadge } from "../ui/bits";
 import { clock, useRecorder } from "@/hooks/useRecorder";
 import { postJSON, transcribeBlob } from "@/lib/client";
+import { answerFromMemory } from "@/lib/agentTools";
 import { dayLabel, timeLabel } from "@/lib/dates";
-import { healthMemory, newId, type VisitRecord } from "@/lib/healthMemory";
-import type { Engine, Evidence, EvidenceAnswer } from "@/lib/schemas";
+import { findInstructionConflict, healthMemory, newId, type VisitRecord } from "@/lib/healthMemory";
+import type { ClinicianInstruction, Engine, Evidence, EvidenceAnswer, Medication } from "@/lib/schemas";
 import { capitalize, formatClock, formatDose, formatFrequency } from "@/lib/text";
 
 const roleName = (role: Evidence["role"]) => (role === "CLINICIAN" ? "Doctor" : role === "PATIENT" ? "You" : "Speaker");
@@ -96,6 +101,149 @@ function ViewSourceButton({ onClick, evidence }: { onClick: () => void; evidence
   );
 }
 
+function instructionLine(instruction: Pick<ClinicianInstruction, "medication" | "dose" | "frequency" | "duration">) {
+  return [capitalize(instruction.medication), formatDose(instruction.dose), formatFrequency(instruction.frequency), instruction.duration]
+    .filter(Boolean)
+    .join(" · ");
+}
+
+function MedicationConfirmationCard({
+  medication,
+  instruction,
+  visit,
+  visits,
+  onSource,
+  toast,
+}: {
+  medication: Medication;
+  instruction: ClinicianInstruction;
+  visit: VisitRecord;
+  visits: VisitRecord[];
+  onSource: (evidence: Evidence, saved: string) => void;
+  toast: (message: string) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState({
+    medication: instruction.medication,
+    dose: instruction.dose ?? "",
+    frequency: instruction.frequency ?? "",
+    duration: instruction.duration ?? "",
+  });
+  const conflict = instruction.status === "PROPOSED" ? findInstructionConflict(instruction, visits) : undefined;
+  const previous = visits
+    .flatMap((item) => item.clinicianInstructions ?? [])
+    .find((item) => item.supersededBy === instruction.id);
+  const proposed = instruction.status === "PROPOSED";
+  const confirm = () => {
+    const correction = editing
+      ? {
+          medication: draft.medication,
+          dose: draft.dose.trim() || null,
+          frequency: draft.frequency.trim() || null,
+          duration: draft.duration.trim() || null,
+        }
+      : undefined;
+    if (healthMemory.confirmInstruction(visit.id, instruction.id, correction)) {
+      toast(editing ? "Corrected instruction confirmed." : "Instruction confirmed and saved.");
+      setEditing(false);
+    }
+  };
+
+  const statusTone =
+    instruction.status === "CONFIRMED"
+      ? "bg-emerald-50 text-emerald-700"
+      : instruction.status === "PROPOSED"
+        ? "bg-amber-50 text-amber-700"
+        : "bg-slate-100 text-slate-500";
+
+  return (
+    <PrismCard className="p-4">
+      <div className="flex items-center justify-between gap-3">
+        <span className="flex items-center gap-2.5">
+          <IconBubble Icon={Pill} size={34} />
+          <span className="eyebrow !text-indigo">Medication instruction</span>
+        </span>
+        <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold tracking-[0.08em] ${statusTone}`}>{instruction.status}</span>
+      </div>
+
+      {editing ? (
+        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+          {(["medication", "dose", "frequency", "duration"] as const).map((field) => (
+            <label key={field} className="glass-inset rounded-2xl px-3 py-2">
+              <span className="eyebrow !text-[9px]">{field}</span>
+              <input
+                value={draft[field]}
+                onChange={(event) => setDraft((current) => ({ ...current, [field]: event.target.value }))}
+                className="mt-1 w-full bg-transparent text-[14px] font-semibold text-ink outline-none"
+              />
+            </label>
+          ))}
+        </div>
+      ) : (
+        <>
+          <p className="mt-3 text-[25px] font-bold tracking-[-0.02em] text-ink">{capitalize(instruction.medication)}</p>
+          <div className="mt-2.5 grid grid-cols-3 gap-2">
+            {[
+              ["Dose", formatDose(instruction.dose)],
+              ["How often", formatFrequency(instruction.frequency)],
+              ["How long", instruction.duration],
+            ].map(([label, value]) => (
+              <div key={label} className="glass-inset rounded-2xl px-2.5 py-2">
+                <p className="eyebrow !text-[9px] !tracking-[0.1em]">{label}</p>
+                <p className={`mt-0.5 text-[15px] font-bold ${value ? "text-ink" : "text-mute/60"}`}>{value ?? "Not said"}</p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {proposed && (
+        <div className="mt-3 rounded-2xl border border-amber-200/80 bg-amber-50/75 p-3">
+          <div className="flex items-start gap-2">
+            <TriangleAlert size={17} className="mt-0.5 shrink-0 text-amber-600" />
+            <div>
+              <p className="text-[12.5px] font-bold text-amber-900">{conflict ? "Medication change detected" : "Please confirm what CareEcho heard"}</p>
+              {conflict && <p className="mt-1 text-[12px] text-amber-900/80">Previously confirmed: {instructionLine(conflict)}</p>}
+              <p className="mt-1 text-[12px] text-amber-900/80">Proposed today: {instructionLine(instruction)}</p>
+              <p className="mt-1 text-[11.5px] leading-relaxed text-amber-800">CareEcho will not replace an earlier instruction until you confirm this one.</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {instruction.status === "CONFIRMED" && previous && (
+        <div className="mt-3 rounded-2xl border border-emerald-200/80 bg-emerald-50/75 p-3">
+          <p className="eyebrow !text-emerald-700">Instruction changed</p>
+          <p className="mt-1 text-[12px] text-emerald-950"><span className="font-bold">Previous:</span> {instructionLine(previous)}</p>
+          <p className="mt-1 text-[12px] text-emerald-950"><span className="font-bold">Today:</span> {instructionLine(instruction)}</p>
+          <p className="mt-1 text-[11.5px] font-semibold text-emerald-700">Confirmed by you · previous instruction superseded</p>
+        </div>
+      )}
+
+      {proposed && (
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          <button onClick={confirm} className="btn-primary flex min-h-11 items-center justify-center gap-1 rounded-full px-2 text-[12px] font-bold">
+            <Check size={14} /> {editing ? "Confirm edit" : "Confirm"}
+          </button>
+          <button onClick={() => setEditing((value) => !value)} className="btn-glass flex min-h-11 items-center justify-center gap-1 rounded-full px-2 text-[12px] font-bold text-indigo">
+            <Pencil size={13} /> {editing ? "Cancel edit" : "Correct"}
+          </button>
+          <button
+            onClick={() => {
+              if (healthMemory.rejectInstruction(visit.id, instruction.id)) toast("Instruction not saved.");
+            }}
+            className="btn-glass flex min-h-11 items-center justify-center gap-1 rounded-full px-2 text-[12px] font-bold text-rose"
+          >
+            <X size={14} /> Don&apos;t save
+          </button>
+        </div>
+      )}
+
+      <ViewSourceButton evidence={medication.evidence} onClick={() => onSource(medication.evidence, instructionLine(instruction))} />
+    </PrismCard>
+  );
+}
+
 function AnswerCard({ answer, question, askedBy, visit, onSource }: { answer: EvidenceAnswer; question: string; askedBy: "voice" | "text"; visit: VisitRecord; onSource: (e: Evidence, saved: string) => void }) {
   return (
     <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} className="space-y-2.5">
@@ -147,7 +295,7 @@ function AnswerCard({ answer, question, askedBy, visit, onSource }: { answer: Ev
 const SUGGESTIONS = ["What did the doctor say about my medication?", "When is my follow-up?", "Should I take it with food?", "Can I drink alcohol?"];
 
 export function VisitSummaryScreen({ id, fresh }: { id: string; fresh?: boolean }) {
-  const { go, visits, openSheet, toast, language } = useShell();
+  const { go, entries, visits, openSheet, toast, language } = useShell();
   const visit = visits.find((v) => v.id === id);
   const rec = useRecorder({ maxSeconds: 30 });
   const [askPhase, setAskPhase] = useState<"idle" | "listening" | "transcribing" | "thinking">("idle");
@@ -195,6 +343,11 @@ export function VisitSummaryScreen({ id, fresh }: { id: string; fresh?: boolean 
     setPending(q);
     setAskPhase("thinking");
     try {
+      const memoryAnswer = answerFromMemory(q, entries, visits);
+      if (memoryAnswer) {
+        healthMemory.addQA(visit.id, { id: newId(), timestamp: new Date().toISOString(), question: q, askedBy, answer: memoryAnswer, engine: "rules" });
+        return;
+      }
       const { answer, engine } = await postJSON<{ answer: EvidenceAnswer; engine: Engine }>("/api/ask", {
         question: q,
         visit: { utterances: visit.utterances, facts: visit.facts },
@@ -232,9 +385,6 @@ export function VisitSummaryScreen({ id, fresh }: { id: string; fresh?: boolean 
   };
 
   const busy = askPhase === "transcribing" || askPhase === "thinking";
-  const medLine = (m: (typeof facts.medications)[number]) =>
-    [capitalize(m.name), formatDose(m.dose), formatFrequency(m.frequency), m.duration].filter(Boolean).join(" · ");
-
   return (
     <ScreenScroll>
       <div className="flex items-center justify-between">
@@ -266,33 +416,15 @@ export function VisitSummaryScreen({ id, fresh }: { id: string; fresh?: boolean 
 
       <p className="eyebrow mt-4">Your care plan</p>
       <div className="mt-2.5 space-y-3">
-        {facts.medications.map((m, i) => (
-          <motion.div key={`m${i}`} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.08, duration: 0.45 }}>
-            <PrismCard className="p-4">
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2.5">
-                  <IconBubble Icon={Pill} size={34} />
-                  <span className="eyebrow !text-indigo">Medication</span>
-                </span>
-                <SourceBadge provenance="CLINICIAN_SAID" />
-              </div>
-              <p className="mt-3 text-[25px] font-bold tracking-[-0.02em] text-ink">{capitalize(m.name)}</p>
-              <div className="mt-2.5 grid grid-cols-3 gap-2">
-                {[
-                  ["Dose", formatDose(m.dose)],
-                  ["How often", formatFrequency(m.frequency)],
-                  ["How long", m.duration],
-                ].map(([label, value]) => (
-                  <div key={label} className="glass-inset rounded-2xl px-2.5 py-2">
-                    <p className="eyebrow !text-[9px] !tracking-[0.1em]">{label}</p>
-                    <p className={`mt-0.5 text-[15px] font-bold ${value ? "text-ink" : "text-mute/60"}`}>{value ?? "Not said"}</p>
-                  </div>
-                ))}
-              </div>
-              <ViewSourceButton evidence={m.evidence} onClick={() => source(m.evidence, medLine(m))} />
-            </PrismCard>
-          </motion.div>
-        ))}
+        {facts.medications.map((medication, index) => {
+          const instruction = (visit.clinicianInstructions ?? [])[index];
+          if (!instruction) return null;
+          return (
+            <motion.div key={instruction.id} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + index * 0.08, duration: 0.45 }}>
+              <MedicationConfirmationCard medication={medication} instruction={instruction} visit={visit} visits={visits} onSource={source} toast={toast} />
+            </motion.div>
+          );
+        })}
 
         {facts.followUp && (
           <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.22, duration: 0.45 }}>
